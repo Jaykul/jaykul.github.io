@@ -1,0 +1,741 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Validating Self-Signed Certificates From .Net and PowerShell - Huddled Masses</title>
+<meta name="description" content="In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them.  If you don’t care about why I wrote it the way I wrote it, you can just check out the module on GitHub or install it with PoshCode or PowerShellGet by running:  ">
+
+
+  <meta name="author" content="Joel "Jaykul" Bennett">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Huddled Masses">
+<meta property="og:title" content="Validating Self-Signed Certificates From .Net and PowerShell">
+<meta property="og:url" content="https://huddledmasses.org/2014/07/validating-self-signed-certificates-properly-from-powershell/">
+
+
+  <meta property="og:description" content="In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them.  If you don’t care about why I wrote it the way I wrote it, you can just check out the module on GitHub or install it with PoshCode or PowerShellGet by running:  ">
+
+
+
+
+
+  <meta name="twitter:site" content="@jaykul">
+  <meta name="twitter:title" content="Validating Self-Signed Certificates From .Net and PowerShell">
+  <meta name="twitter:description" content="In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them.  If you don’t care about why I wrote it the way I wrote it, you can just check out the module on GitHub or install it with PoshCode or PowerShellGet by running:  ">
+  <meta name="twitter:url" content="https://huddledmasses.org/2014/07/validating-self-signed-certificates-properly-from-powershell/">
+
+  
+    <meta name="twitter:card" content="summary">
+    
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2014-07-28T01:30:03-04:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://huddledmasses.org/2014/07/validating-self-signed-certificates-properly-from-powershell/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Joel \"Jaykul\" Bennett",
+      "url": "https://huddledmasses.org/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Huddled Masses Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Huddled Masses
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/2014/07/about-huddled-masses">About Me</a>
+            </li><li class="masthead__menu-item">
+              <a href="/Resume-ShortForm.pdf">Resume</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/Jaykul/PowerLine/">PowerLine</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/PoshCode/PANSIES/">PANSIES</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/ShowUI/ShowUI">ShowUI</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/Jaykul/PoshConsole/">PoshConsole</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="https://HuddledMasses.org/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/2014" itemprop="item"><span itemprop="name">2014</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+        
+      
+    
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/2014/07" itemprop="item"><span itemprop="name">07</span></a>
+          <meta itemprop="position" content="3" />
+        </li>
+        <span class="sep">/</span>
+        
+      
+    
+      
+      
+        <li class="current">Validating Self-Signed Certificates From .Net and PowerShell</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.png" alt="Joel "Jaykul" Bennett" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Joel "Jaykul" Bennett</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>An opinionated DevOps engineer, programmer, speaker, and Microsoft MVP.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Rochester, NY</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:Jaykul@HuddledMasses.org" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://stackoverflow.com/users/8718/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> StackOverflow</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Validating Self-Signed Certificates From .Net and PowerShell">
+    <meta itemprop="description" content="In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them.  If you don’t care about why I wrote it the way I wrote it, you can just check out the module on GitHub or install it with PoshCode or PowerShellGet by running:">
+    <meta itemprop="datePublished" content="2014-07-28T01:30:03-04:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Validating Self-Signed Certificates From .Net and PowerShell
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them.  If you don’t care about why I wrote it the way I wrote it, you can just <a href="https://github.com/Jaykul/Tunable-SSL-Validator">check out the module on GitHub</a> or install it with PoshCode or PowerShellGet by running:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="nf">Install-Module</span><span class="w"> </span><span class="nx">TunableSSLValidator</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The module includes commands for importing certificates from files, loading them from the web server response of an http url, importing them to the Windows certificate store (to be trusted), and temporarily trusting them for a single PowerShell session.  It also includes proxy function command wrappers for <code class="language-plaintext highlighter-rouge">Invoke-WebRequest</code> and <code class="language-plaintext highlighter-rouge">Invoke-RestMethod</code> to add an <code class="language-plaintext highlighter-rouge">-Insecure</code> switch which allows single queries to ignore invalid SSL certificates.</p>
+
+<p><strong>One caveat</strong> is that the way that it works is based on implementing the ServerCertificateValidationCallback, and the <em>results of that callback are cached</em> by your system, so in testing I’ve found that if you allow a certain URL, that URL is going to be valid for several seconds until the cache expires, so if you make several repeated calls to the same URL, and only the first one is flagged <code class="language-plaintext highlighter-rouge">-insecure</code>, they <em>may</em> all succeed. I can’t remember what the documentation says about the timing or flushing the cache right now, but although it’s obviously not a security issue, I am going to look for a way to flush that if it’s possible.</p>
+
+<h1 id="some-background">Some Background</h1>
+
+<p>The root of the problem is that the web request classes in .Net automatically validate SSL certificates, and until version 4.5 there was not an easy way to ignore SSL errors or skip the validation on an individual request. That means that when you try to get a web page from a server like the <a href="https://csh.rit.edu">computer science house at RIT</a>, you get an error like:</p>
+
+<p>The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</p>
+
+<p>For most linux command line apps like <em>curl</em> you have a parameter like <code class="language-plaintext highlighter-rouge">--insecure</code> which allows you to just ignore invalid SSL certificates for a single web request, but for .Net and PowerShell there is no such a flag, resulting in <a href="http://stackoverflow.com/search?q=self-signed+SSL+certificates+[csharp]+OR+[powershell]">a lot of questions on StackOverflow</a> and other such websites about the best way to deal with them.</p>
+
+<p>Beginning with version 3.0, PowerShell ships with <code class="language-plaintext highlighter-rouge">Invoke-WebRequest</code> and <code class="language-plaintext highlighter-rouge">Invoke-RestMethod</code> cmdlets, but these cmdlets don’t have an <code class="language-plaintext highlighter-rouge">-insecure</code> switch, and so you can’t use them unless you disable validation.  The module I’m going to present here will fix that, and I want to show you how I did it so you can do the same thing for other similar cmdlets (like the <code class="language-plaintext highlighter-rouge">Export-ODataEndpointProxy</code> cmdlet that showed up in the July preview of PowerShell 5, and the cmdlets it generates).</p>
+
+<h1 id="removing-ssl-validation">Removing SSL Validation</h1>
+
+<p>There are a couple of common approaches to this problem in PowerShell (and .Net too, actually). The first is to just add the SSL certificate to your trusted store. The second is to set the ServicePointManager’s ServerCertificateValidationCallback to a function that just returns TRUE – thus ignoring <strong>all</strong> certificate errors.</p>
+
+<p>That first solution is probably the right one, and I actually wrote a couple of function in this module to make it easier (one to fetch a cert from a web server, and another to add a certificate to your trusted store).  Of course, it would be even better to set up an actual trusted root certificate authority (for instance, using Active Directory), but the bottom line is that either of these require permanently altering the trust of the computer in order to make a web request. The problem is that if you’re writing scripts, cmdlets or .Net applications that may be used by others, it basically amounts to telling your potential users they have to deal with the problem themselves (which, for the record, is exactly what Microsoft did when they wrote their web cmdlets for PowerShell 3).</p>
+
+<p>So if you want to proactively avoid SSL errors, you have to set the ServerCertificateValidationCallback. For certain situations, it’s enough to just do this in PowerShell:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://csh.rit.edu"</span><span class="w">
+</span><span class="nv">$web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">Net.WebClient</span><span class="w">
+</span><span class="p">[</span><span class="no">System.Net.</span><span class="kt">ServicePointManager</span><span class="p">]::</span><span class="nf">ServerCertificateValidationCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$true</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span><span class="nv">$output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$web</span><span class="o">.</span><span class="nf">DownloadString</span><span class="p">(</span><span class="nv">$url</span><span class="p">)</span><span class="w">
+</span><span class="p">[</span><span class="no">System.Net.</span><span class="kt">ServicePointManager</span><span class="p">]::</span><span class="nf">ServerCertificateValidationCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">$null</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Note, that I set the ServerCertificateValidationCallback back to <code class="language-plaintext highlighter-rouge">$null</code> when I was done – this restores normal validation, so I have, in effect, only disabled the validation for that one call (since PowerShell isn’t generally multi-threaded, I don’t normally have to worry about other threads being affeected). However, setting the ServerCertificateValidationCallback to a scriptblock won’t work for an asynchronous callback (one that happens on a task thread), because the other thread won’t have a runspace to execute the script on.  So, if you try to use the same technique with Invoke-WebRequest or Invoke-RestMethod instead of calling the .Net <code class="language-plaintext highlighter-rouge">WebClient</code> methods directly, you’ll just get a different error:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The underlying connection was closed: An unexpected error occurred on a send.
+</code></pre></div></div>
+
+<p>If you dig in a little bit, you’ll find that the InnerException of the error was:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There is no Runspace available to run scripts in this thread.
+You can provide one in the DefaultRunspace property
+of the System.Management.Automation.Runspaces.Runspace type.
+The script block you attempted to invoke was:  $true
+</code></pre></div></div>
+
+<p>Obviously this approach doesn’t work at that point, and the Invoke-WebRequest cmdlet is not the only place which will call web APIs on background threads, so to make those cmdlets and APIs work, we need to write it in C# (and do so in a way that’s flexible enough that we can control it from PowerShell).</p>
+
+<p>Additionally, simply returning true will disable all validation, and that’s not really a safe practice – it’s certainly not what you want to do all of the time. If you’re on .Net 4.5 or later, you can set the callback on the a raw HttpWebRequest and only affect that one request, but obviously that only works if you write your code at that low level, don’t use the PowerShell cmdlets, and are on the latest version of .Net – plus, you still have to write the logic that determines when that should happen.</p>
+
+<p>The bottom line is that what we probably want is something like an <code class="language-plaintext highlighter-rouge">insecure</code> switch on the PowerShell cmdlets, so that we can make a specific request be insecure, and then when we were writing functions, we could just pass that parameter up to our functions.</p>
+
+<h1 id="custom-ssl-validator">Custom SSL Validator</h1>
+
+<p>There are several example validators on the <a href="http://www.mono-project.com/UsingTrustedRootsRespectfully">Using Trusted Roots Respectfully</a> page from mono project, but I’m going to try to blend a few of those validators to give us the option of tuning the SSL validation to our specific needs.</p>
+
+<p>The point is that I don’t want to weaken <em>all</em> validation, I just want to trust a specific cert for a specific domain, or perhaps just ignore problems on one domain, or make one specific request regardless of whether the SSL certificate is valid or not.</p>
+
+<p>Let’s look at the callback and see the information we have to work with:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">TunableValidationCallback</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">X509Certificate</span> <span class="n">certificate</span><span class="p">,</span> <span class="n">X509Chain</span> <span class="n">chain</span><span class="p">,</span> <span class="n">SslPolicyErrors</span> <span class="n">sslPolicyErrors</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ol>
+  <li>The sender is usually going to be the WebRequest that was calling an https domain that failed validation.</li>
+  <li>The certificate, of course, is the one the actually failed …</li>
+  <li>The chain is the series of certificates that issued the original one, back to the root certificate authority, along with the trust information about them.</li>
+  <li>The sslPolicyErrors tells us what went wrong: Was there no cert? Was the cert for the wrong domain? Was the root CA not trusted?</li>
+</ol>
+
+<p>So, what I’ve written is first a check for the three main SSL errors, and a way to pre-emptively ignore them once, or post-humously trust a certificate that failed the first time, as well as some better error messages (which have to be output using Console.Error.WriteLine rather than Write-Error because they might be running on a background thread).</p>
+
+<p>For now, that’s enough of an explanation, I’ve posted the <a href="https://github.com/Jaykul/Tunable-SSL-Validator">tunable SSL validator code to github</a>, and this blog post as the ReadMe, where I’ll update it with more details if need be.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/powershell" class="page__taxonomy-item" rel="tag">powershell</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/rest" class="page__taxonomy-item" rel="tag">rest</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/ssl" class="page__taxonomy-item" rel="tag">ssl</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/webrequest" class="page__taxonomy-item" rel="tag">webrequest</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2014-07-28T01:30:03-04:00">July 28, 2014</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=jaykul&text=Validating+Self-Signed+Certificates+From+.Net+and+PowerShell%20https%3A%2F%2Fhuddledmasses.org%2F2014%2F07%2Fvalidating-self-signed-certificates-properly-from-powershell%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhuddledmasses.org%2F2014%2F07%2Fvalidating-self-signed-certificates-properly-from-powershell%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fhuddledmasses.org%2F2014%2F07%2Fvalidating-self-signed-certificates-properly-from-powershell%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2014/07/a-fresh-start/" class="pagination--pager" title="A Fresh Start
+">Previous</a>
+    
+    
+      <a href="/2014/10/developer-brain/" class="pagination--pager" title="How the developer’s brain works
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <section id="static-comments">
+        
+      </section>
+    
+</div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2020/03/powershell-casting-oddities/" rel="permalink">PowerShell Casting Oddities
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">PowerShell’s casting can result in some weird results.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/10/developer-brain/" rel="permalink">How the developer’s brain works
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  I need to finish the PoshCode module, so I start working on that …
+  I realize the “Configuration” module that is inside PoshCode, is actually more import...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/07/a-fresh-start/" rel="permalink">A Fresh Start
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A few weeks ago, someone somehow injected a shell onto my WordPress powered blog site. They managed to get multiple hacking tools installed, delete files req...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/07/missing-content/" rel="permalink">Missing Content
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Since I’ve blown away all my old blog content, there are a lot of pages missing that were really useful.
+I’m going to bring the best of them back, and I have...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://linkedin.com/in/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://stackoverflow.com/users/8718/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> StackOverflow</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Joel "Jaykul" Bennett. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-52513307-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+
+  
+
+
+
+
+
+  </body>
+</html>

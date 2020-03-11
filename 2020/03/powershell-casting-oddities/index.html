@@ -1,0 +1,781 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>PowerShell Casting Oddities - Huddled Masses</title>
+<meta name="description" content="PowerShell’s casting can result in some weird results.  ">
+
+
+  <meta name="author" content="Joel "Jaykul" Bennett">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Huddled Masses">
+<meta property="og:title" content="PowerShell Casting Oddities">
+<meta property="og:url" content="https://huddledmasses.org/2020/03/powershell-casting-oddities/">
+
+
+  <meta property="og:description" content="PowerShell’s casting can result in some weird results.  ">
+
+
+
+
+
+  <meta name="twitter:site" content="@jaykul">
+  <meta name="twitter:title" content="PowerShell Casting Oddities">
+  <meta name="twitter:description" content="PowerShell’s casting can result in some weird results.  ">
+  <meta name="twitter:url" content="https://huddledmasses.org/2020/03/powershell-casting-oddities/">
+
+  
+    <meta name="twitter:card" content="summary">
+    
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2020-03-03T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://huddledmasses.org/2020/03/powershell-casting-oddities/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Joel \"Jaykul\" Bennett",
+      "url": "https://huddledmasses.org/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Huddled Masses Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Huddled Masses
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/2014/07/about-huddled-masses">About Me</a>
+            </li><li class="masthead__menu-item">
+              <a href="/Resume-ShortForm.pdf">Resume</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/Jaykul/PowerLine/">PowerLine</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/PoshCode/PANSIES/">PANSIES</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/ShowUI/ShowUI">ShowUI</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/Jaykul/PoshConsole/">PoshConsole</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="https://HuddledMasses.org/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/2020" itemprop="item"><span itemprop="name">2020</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+        
+      
+    
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/2020/03" itemprop="item"><span itemprop="name">03</span></a>
+          <meta itemprop="position" content="3" />
+        </li>
+        <span class="sep">/</span>
+        
+      
+    
+      
+      
+        <li class="current">PowerShell Casting Oddities</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.png" alt="Joel "Jaykul" Bennett" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Joel "Jaykul" Bennett</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>An opinionated DevOps engineer, programmer, speaker, and Microsoft MVP.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Rochester, NY</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:Jaykul@HuddledMasses.org" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://stackoverflow.com/users/8718/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> StackOverflow</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="PowerShell Casting Oddities">
+    <meta itemprop="description" content="PowerShell’s casting can result in some weird results.">
+    <meta itemprop="datePublished" content="2020-03-03T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">PowerShell Casting Oddities
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="powershells-casting-can-result-in-some-weird-results">PowerShell’s casting can result in some weird results.</h2>
+
+<p>Before we begin, check out this C# class:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">User</span>
+<span class="p">{</span>
+    <span class="c1">// The user's id (e.g.: StackOverflow id, employee number, or whatever)</span>
+    <span class="k">public</span> <span class="n">UInt32</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">// The user's name (for display). First and last, nickname, whatever.</span>
+    <span class="k">public</span> <span class="n">String</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="c1">// The user's email (for auth and communications)</span>
+    <span class="k">public</span> <span class="n">String</span> <span class="n">Email</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="c1">// Get the user from the datastore by Id</span>
+    <span class="k">public</span> <span class="nf">User</span><span class="p">(</span><span class="n">UInt32</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create a new user from their email</span>
+    <span class="k">public</span> <span class="nf">User</span><span class="p">(</span><span class="n">String</span> <span class="n">email</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Email</span> <span class="p">=</span> <span class="n">email</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create empty users</span>
+    <span class="c1">// Parameterless default constructors are common in WPF and PowerShell</span>
+    <span class="k">public</span> <span class="nf">User</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+
+    <span class="c1">// Prefer user Name but show Email otherwise</span>
+    <span class="k">public</span> <span class="k">override</span> <span class="kt">string</span> <span class="nf">ToString</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">Name</span> <span class="p">??</span> <span class="n">Email</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It’s a pretty simple class with three constructors: the default (parameterless) one, and one each taking the email and id. PowerShell will cast using the constructors of a type, so in this case, you can cast either a string or a number –or a hashtable– to <code class="language-plaintext highlighter-rouge">User</code>.</p>
+
+<p>We can add this type to our PowerShell session using <code class="language-plaintext highlighter-rouge">Add-Type</code>:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Add-Type</span><span class="w"> </span><span class="nt">-path</span><span class="w"> </span><span class="nx">User.cs</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The most interesting of PowerShell’s special casting powers is the hashtable cast. Any class that has a default (parameterless) constructor can be created by casting a hashtable of (some of) it’s <em>settable</em> properties:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">User</span><span class="p">]@{</span><span class="w">
+    </span><span class="nx">Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">1</span><span class="w">
+    </span><span class="nx">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Jaykul"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Id Name   Email
+-- ----   -----
+ 1 Jaykul
+</code></pre></div></div>
+
+<h2 id="one-of-the-weirdest-examples-is-this-id-constructor">One of the weirdest examples is this id constructor.</h2>
+
+<p>In the case of this particular <code class="language-plaintext highlighter-rouge">User</code> class, when we cast a number, like <code class="language-plaintext highlighter-rouge">[User]2</code> it’s the same as calling <code class="language-plaintext highlighter-rouge">[User]::new(2)</code>, but the results of either are a little surprising:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Id Name Email
+-- ---- -----
+ 0      2
+</code></pre></div></div>
+
+<p>The number was used for the <code class="language-plaintext highlighter-rouge">Email</code> value, instead of the <code class="language-plaintext highlighter-rouge">Id</code> that we expected…</p>
+
+<p>The reason for this is actually straightforward, but it’s due to a combination of reasons that aren’t intuitive.</p>
+
+<p>The bottom line is that the numeric constructor we might have <em>thought</em> we were calling accepts a <code class="language-plaintext highlighter-rouge">uint</code> (an unsigned int), rather than a signed <code class="language-plaintext highlighter-rouge">int</code>, and literal numbers in PowerShell are always <code class="language-plaintext highlighter-rouge">[int]</code> (or <code class="language-plaintext highlighter-rouge">[double]</code> if they have a decimal place).</p>
+
+<p>PowerShell (well, programming languages in genera) won’t cast <em>implicitly</em> if it looses information. Implicit casting is when you try to pass a value to a method (or function) that accepts a different type of value. Explicit casting is when you specify the type by writing it out.</p>
+
+<p>So for instance, a <code class="language-plaintext highlighter-rouge">int</code> will cast <em>implicitly</em> to a <code class="language-plaintext highlighter-rouge">double</code>, but not the other way around, because you would loose the fractional value. You can still cast it <em>explicitly</em>, by just specifying <code class="language-plaintext highlighter-rouge">[double]</code>.</p>
+
+<p>PowerShell simply won’t call the method that accepts an unsigned int unless you specifically cast the number to an unsigned int. As far as syntax, you can double-cast it:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">User</span><span class="p">][</span><span class="kt">uint</span><span class="p">]</span><span class="mi">2</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Or you can call the constructor more explicitly. An <em>explicit</em> cast is one where you specify the type name that you want to cast to. When you specify the type like <code class="language-plaintext highlighter-rouge">[uint]</code> then PowerShell assumes you understand what you’re doing.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">User</span><span class="p">]::</span><span class="nf">new</span><span class="p">([</span><span class="kt">uint</span><span class="p">]</span><span class="mi">2</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Either way, you’ll get a user with an Id but no Name or Email.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Id Name Email
+-- ---- --------
+ 2
+</code></pre></div></div>
+
+<p>Of course, the other part of the puzzle is why you get an unexpected result, instead of an error like:</p>
+
+<blockquote>
+  <p>“InvalidArgument: Cannot convert the “2” value of type “System.Int32” to type “User”.</p>
+</blockquote>
+
+<p>The reason is <em>yet another</em> PowerShell casting oddity: PowerShell can (and will) cast <em>anything</em> to a string implicitly, by calling it’s <code class="language-plaintext highlighter-rouge">ToString()</code> method. That’s really convenient in a shell, where you regularly want to <em>display</em> things as strings, but sometimes… well, something like this happens.</p>
+
+<p>In other words, PowerShell <em>will</em> implicitly cast an integer to <code class="language-plaintext highlighter-rouge">string</code>, but <em>will not</em> cast implicitly it to <code class="language-plaintext highlighter-rouge">uint</code> – so you get an unexpected constructor and result.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/casting" class="page__taxonomy-item" rel="tag">casting</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/classes" class="page__taxonomy-item" rel="tag">classes</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/powershell" class="page__taxonomy-item" rel="tag">powershell</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/powershell" class="page__taxonomy-item" rel="tag">powershell</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-03-03T00:00:00-05:00">March 3, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=jaykul&text=PowerShell+Casting+Oddities%20https%3A%2F%2Fhuddledmasses.org%2F2020%2F03%2Fpowershell-casting-oddities%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhuddledmasses.org%2F2020%2F03%2Fpowershell-casting-oddities%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fhuddledmasses.org%2F2020%2F03%2Fpowershell-casting-oddities%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2014/10/developer-brain/" class="pagination--pager" title="How the developer’s brain works
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <section id="static-comments">
+        
+      </section>
+    
+</div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/10/developer-brain/" rel="permalink">How the developer’s brain works
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  I need to finish the PoshCode module, so I start working on that …
+  I realize the “Configuration” module that is inside PoshCode, is actually more import...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/07/validating-self-signed-certificates-properly-from-powershell/" rel="permalink">Validating Self-Signed Certificates From .Net and PowerShell
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/07/a-fresh-start/" rel="permalink">A Fresh Start
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A few weeks ago, someone somehow injected a shell onto my WordPress powered blog site. They managed to get multiple hacking tools installed, delete files req...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/07/missing-content/" rel="permalink">Missing Content
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Since I’ve blown away all my old blog content, there are a lot of pages missing that were really useful.
+I’m going to bring the best of them back, and I have...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://linkedin.com/in/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://stackoverflow.com/users/8718/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> StackOverflow</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Joel "Jaykul" Bennett. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-52513307-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+
+  
+
+
+
+
+
+  </body>
+</html>

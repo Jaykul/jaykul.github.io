@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://huddledmasses.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://huddledmasses.org/" rel="alternate" type="text/html" /><updated>2020-03-11T01:09:22-04:00</updated><id>https://huddledmasses.org/feed.xml</id><title type="html">Huddled Masses</title><subtitle>Personal projects and blog posts by Joel &quot;Jaykul&quot; Bennett</subtitle><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><entry><title type="html">PowerShell Casting Oddities</title><link href="https://huddledmasses.org/2020/03/powershell-casting-oddities/" rel="alternate" type="text/html" title="PowerShell Casting Oddities" /><published>2020-03-03T00:00:00-05:00</published><updated>2020-03-03T00:00:00-05:00</updated><id>https://huddledmasses.org/2020/03/powershell-casting-oddities</id><content type="html" xml:base="https://huddledmasses.org/2020/03/powershell-casting-oddities/">&lt;h2 id=&quot;powershells-casting-can-result-in-some-weird-results&quot;&gt;PowerShell’s casting can result in some weird results.&lt;/h2&gt;
+
+&lt;p&gt;Before we begin, check out this C# class:&lt;/p&gt;
+
+&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// The user's id (e.g.: StackOverflow id, employee number, or whatever)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UInt32&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// The user's name (for display). First and last, nickname, whatever.&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// The user's email (for auth and communications)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Get the user from the datastore by Id&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UInt32&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Create a new user from their email&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Create empty users&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Parameterless default constructors are common in WPF and PowerShell&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Prefer user Name but show Email otherwise&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ToString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It’s a pretty simple class with three constructors: the default (parameterless) one, and one each taking the email and id. PowerShell will cast using the constructors of a type, so in this case, you can cast either a string or a number –or a hashtable– to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;User&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We can add this type to our PowerShell session using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Add-Type&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;Add-Type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-path&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;User.cs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The most interesting of PowerShell’s special casting powers is the hashtable cast. Any class that has a default (parameterless) constructor can be created by casting a hashtable of (some of) it’s &lt;em&gt;settable&lt;/em&gt; properties:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]@{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Jaykul&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Id Name   Email
+-- ----   -----
+ 1 Jaykul
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;one-of-the-weirdest-examples-is-this-id-constructor&quot;&gt;One of the weirdest examples is this id constructor.&lt;/h2&gt;
+
+&lt;p&gt;In the case of this particular &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;User&lt;/code&gt; class, when we cast a number, like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[User]2&lt;/code&gt; it’s the same as calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[User]::new(2)&lt;/code&gt;, but the results of either are a little surprising:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Id Name Email
+-- ---- -----
+ 0      2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The number was used for the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Email&lt;/code&gt; value, instead of the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Id&lt;/code&gt; that we expected…&lt;/p&gt;
+
+&lt;p&gt;The reason for this is actually straightforward, but it’s due to a combination of reasons that aren’t intuitive.&lt;/p&gt;
+
+&lt;p&gt;The bottom line is that the numeric constructor we might have &lt;em&gt;thought&lt;/em&gt; we were calling accepts a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint&lt;/code&gt; (an unsigned int), rather than a signed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt;, and literal numbers in PowerShell are always &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[int]&lt;/code&gt; (or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[double]&lt;/code&gt; if they have a decimal place).&lt;/p&gt;
+
+&lt;p&gt;PowerShell (well, programming languages in genera) won’t cast &lt;em&gt;implicitly&lt;/em&gt; if it looses information. Implicit casting is when you try to pass a value to a method (or function) that accepts a different type of value. Explicit casting is when you specify the type by writing it out.&lt;/p&gt;
+
+&lt;p&gt;So for instance, a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; will cast &lt;em&gt;implicitly&lt;/em&gt; to a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;double&lt;/code&gt;, but not the other way around, because you would loose the fractional value. You can still cast it &lt;em&gt;explicitly&lt;/em&gt;, by just specifying &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[double]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;PowerShell simply won’t call the method that accepts an unsigned int unless you specifically cast the number to an unsigned int. As far as syntax, you can double-cast it:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Or you can call the constructor more explicitly. An &lt;em&gt;explicit&lt;/em&gt; cast is one where you specify the type name that you want to cast to. When you specify the type like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[uint]&lt;/code&gt; then PowerShell assumes you understand what you’re doing.&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Either way, you’ll get a user with an Id but no Name or Email.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Id Name Email
+-- ---- --------
+ 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Of course, the other part of the puzzle is why you get an unexpected result, instead of an error like:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“InvalidArgument: Cannot convert the “2” value of type “System.Int32” to type “User”.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The reason is &lt;em&gt;yet another&lt;/em&gt; PowerShell casting oddity: PowerShell can (and will) cast &lt;em&gt;anything&lt;/em&gt; to a string implicitly, by calling it’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ToString()&lt;/code&gt; method. That’s really convenient in a shell, where you regularly want to &lt;em&gt;display&lt;/em&gt; things as strings, but sometimes… well, something like this happens.&lt;/p&gt;
+
+&lt;p&gt;In other words, PowerShell &lt;em&gt;will&lt;/em&gt; implicitly cast an integer to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;string&lt;/code&gt;, but &lt;em&gt;will not&lt;/em&gt; cast implicitly it to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint&lt;/code&gt; – so you get an unexpected constructor and result.&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="powershell" /><category term="powershell" /><category term="classes" /><category term="casting" /><summary type="html">PowerShell’s casting can result in some weird results.</summary></entry><entry><title type="html">How the developer’s brain works</title><link href="https://huddledmasses.org/2014/10/developer-brain/" rel="alternate" type="text/html" title="How the developer's brain works" /><published>2014-10-27T05:47:43-04:00</published><updated>2014-10-27T05:47:43-04:00</updated><id>https://huddledmasses.org/2014/10/developer-brain</id><content type="html" xml:base="https://huddledmasses.org/2014/10/developer-brain/">&lt;ol&gt;
+  &lt;li&gt;I need to finish &lt;a href=&quot;https://GitHub.com/PoshCode/PoshCode&quot;&gt;the PoshCode module&lt;/a&gt;, so I start working on that …&lt;/li&gt;
+  &lt;li&gt;I realize the “Configuration” module that is inside PoshCode, is actually more important than PoshCode (that is, I think more developers will use it, because even PowerShellGet users need this)&lt;/li&gt;
+  &lt;li&gt;I decide to separate the Configuration module project and fully test it.&lt;/li&gt;
+  &lt;li&gt;I start writing tests for &lt;a href=&quot;https://GitHub.com/PoshCode/Configuration&quot;&gt;the Configuration module&lt;/a&gt; but remember that I hate RSpec syntax.&lt;/li&gt;
+  &lt;li&gt;I fork [Pester], and add support for Gherkin and feature definition files&lt;/li&gt;
+  &lt;li&gt;I return to development on the Configuration module, using it as a testbed for missing features in Pester’s Gherkin support.&lt;/li&gt;
+  &lt;li&gt;I finally finish the Pester Gherkin support and &lt;a href=&quot;https://GitHub.com/Pester/Pester/tree/Gherkin&quot;&gt;get it accepted&lt;/a&gt; to the Pester repository, feeling a great sense of accomplishment&lt;/li&gt;
+  &lt;li&gt;The Pester team wants to refactor the main module to make new interfaces like Gherkin easier to write, but puts it on a back burner for the next release.&lt;/li&gt;
+  &lt;li&gt;I set my project aside until they have time to work on the refactor, forgetting that the whole reason I was working on this was so I could finish PoshCode …&lt;/li&gt;
+  &lt;li&gt;I decide to write a blog post about it …&lt;/li&gt;
+  &lt;li&gt;I remember that I’m still using a Python static blog generator …&lt;/li&gt;
+  &lt;li&gt;I find &lt;a href=&quot;https://github.com/robmen/tinysite&quot;&gt;Rob Mensching’s TinySite&lt;/a&gt;, but it’s basically an abandoned prototype, and I think it’s ridiculous that it uses json …&lt;/li&gt;
+  &lt;li&gt;I wonder if a static generator in .Net would be a good way to present on templating langauges for our local user group&lt;/li&gt;
+  &lt;li&gt;I consider how nice it would be if the generators had PowerShell cmdlets instead of weird multi-command mode commands that don’t actually shell&lt;/li&gt;
+  &lt;li&gt;And two weeks later, I have a first draft version of &lt;a href=&quot;https://github.com/Jaykul/PowerSite&quot;&gt;PowerSite&lt;/a&gt;, my very own &lt;a href=&quot;https://github.com/Jaykul/PowerSite&quot;&gt;static blog engine&lt;/a&gt;, that works well enough to switch this blog over to it, and I can write that blog post…&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;but-i-totally-cant-remember-why-i-thought-the-pesterconfigurationposhcode-thing-was-worth-blogging-about-in-the-first-place&quot;&gt;But I totally can’t remember why I thought the Pester/Configuration/PoshCode thing was worth blogging about in the first place.&lt;/h2&gt;
+
+&lt;h4 id=&quot;oh-wait-what-ever-happened-to-that-configuration-module-did-i-finish-that&quot;&gt;Oh, wait, what ever happened to that Configuration module? Did I finish that?&lt;/h4&gt;
+
+&lt;h6 id=&quot;ohhhhh-shoot-the-poshcode-module-was-supposed-to-be-finished-in-august&quot;&gt;Ohhhhh… shoot! The PoshCode module was supposed to be finished in August!&lt;/h6&gt;
+
+&lt;p&gt;True story. This might be why God invented managers.&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="development" /><category term="personal" /><summary type="html">I need to finish the PoshCode module, so I start working on that … I realize the “Configuration” module that is inside PoshCode, is actually more important than PoshCode (that is, I think more developers will use it, because even PowerShellGet users need this) I decide to separate the Configuration module project and fully test it. I start writing tests for the Configuration module but remember that I hate RSpec syntax. I fork [Pester], and add support for Gherkin and feature definition files I return to development on the Configuration module, using it as a testbed for missing features in Pester’s Gherkin support. I finally finish the Pester Gherkin support and get it accepted to the Pester repository, feeling a great sense of accomplishment The Pester team wants to refactor the main module to make new interfaces like Gherkin easier to write, but puts it on a back burner for the next release. I set my project aside until they have time to work on the refactor, forgetting that the whole reason I was working on this was so I could finish PoshCode … I decide to write a blog post about it … I remember that I’m still using a Python static blog generator … I find Rob Mensching’s TinySite, but it’s basically an abandoned prototype, and I think it’s ridiculous that it uses json … I wonder if a static generator in .Net would be a good way to present on templating langauges for our local user group I consider how nice it would be if the generators had PowerShell cmdlets instead of weird multi-command mode commands that don’t actually shell And two weeks later, I have a first draft version of PowerSite, my very own static blog engine, that works well enough to switch this blog over to it, and I can write that blog post…</summary></entry><entry><title type="html">Validating Self-Signed Certificates From .Net and PowerShell</title><link href="https://huddledmasses.org/2014/07/validating-self-signed-certificates-properly-from-powershell/" rel="alternate" type="text/html" title="Validating Self-Signed Certificates From .Net and PowerShell" /><published>2014-07-28T01:30:03-04:00</published><updated>2014-07-28T01:30:03-04:00</updated><id>https://huddledmasses.org/2014/07/validating-self-signed-certificates-properly-from-powershell</id><content type="html" xml:base="https://huddledmasses.org/2014/07/validating-self-signed-certificates-properly-from-powershell/">&lt;p&gt;In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them.  If you don’t care about why I wrote it the way I wrote it, you can just &lt;a href=&quot;https://github.com/Jaykul/Tunable-SSL-Validator&quot;&gt;check out the module on GitHub&lt;/a&gt; or install it with PoshCode or PowerShellGet by running:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Install-Module&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;TunableSSLValidator&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The module includes commands for importing certificates from files, loading them from the web server response of an http url, importing them to the Windows certificate store (to be trusted), and temporarily trusting them for a single PowerShell session.  It also includes proxy function command wrappers for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Invoke-WebRequest&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Invoke-RestMethod&lt;/code&gt; to add an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-Insecure&lt;/code&gt; switch which allows single queries to ignore invalid SSL certificates.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;One caveat&lt;/strong&gt; is that the way that it works is based on implementing the ServerCertificateValidationCallback, and the &lt;em&gt;results of that callback are cached&lt;/em&gt; by your system, so in testing I’ve found that if you allow a certain URL, that URL is going to be valid for several seconds until the cache expires, so if you make several repeated calls to the same URL, and only the first one is flagged &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-insecure&lt;/code&gt;, they &lt;em&gt;may&lt;/em&gt; all succeed. I can’t remember what the documentation says about the timing or flushing the cache right now, but although it’s obviously not a security issue, I am going to look for a way to flush that if it’s possible.&lt;/p&gt;
+
+&lt;h1 id=&quot;some-background&quot;&gt;Some Background&lt;/h1&gt;
+
+&lt;p&gt;The root of the problem is that the web request classes in .Net automatically validate SSL certificates, and until version 4.5 there was not an easy way to ignore SSL errors or skip the validation on an individual request. That means that when you try to get a web page from a server like the &lt;a href=&quot;https://csh.rit.edu&quot;&gt;computer science house at RIT&lt;/a&gt;, you get an error like:&lt;/p&gt;
+
+&lt;p&gt;The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.&lt;/p&gt;
+
+&lt;p&gt;For most linux command line apps like &lt;em&gt;curl&lt;/em&gt; you have a parameter like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--insecure&lt;/code&gt; which allows you to just ignore invalid SSL certificates for a single web request, but for .Net and PowerShell there is no such a flag, resulting in &lt;a href=&quot;http://stackoverflow.com/search?q=self-signed+SSL+certificates+[csharp]+OR+[powershell]&quot;&gt;a lot of questions on StackOverflow&lt;/a&gt; and other such websites about the best way to deal with them.&lt;/p&gt;
+
+&lt;p&gt;Beginning with version 3.0, PowerShell ships with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Invoke-WebRequest&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Invoke-RestMethod&lt;/code&gt; cmdlets, but these cmdlets don’t have an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-insecure&lt;/code&gt; switch, and so you can’t use them unless you disable validation.  The module I’m going to present here will fix that, and I want to show you how I did it so you can do the same thing for other similar cmdlets (like the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Export-ODataEndpointProxy&lt;/code&gt; cmdlet that showed up in the July preview of PowerShell 5, and the cmdlets it generates).&lt;/p&gt;
+
+&lt;h1 id=&quot;removing-ssl-validation&quot;&gt;Removing SSL Validation&lt;/h1&gt;
+
+&lt;p&gt;There are a couple of common approaches to this problem in PowerShell (and .Net too, actually). The first is to just add the SSL certificate to your trusted store. The second is to set the ServicePointManager’s ServerCertificateValidationCallback to a function that just returns TRUE – thus ignoring &lt;strong&gt;all&lt;/strong&gt; certificate errors.&lt;/p&gt;
+
+&lt;p&gt;That first solution is probably the right one, and I actually wrote a couple of function in this module to make it easier (one to fetch a cert from a web server, and another to add a certificate to your trusted store).  Of course, it would be even better to set up an actual trusted root certificate authority (for instance, using Active Directory), but the bottom line is that either of these require permanently altering the trust of the computer in order to make a web request. The problem is that if you’re writing scripts, cmdlets or .Net applications that may be used by others, it basically amounts to telling your potential users they have to deal with the problem themselves (which, for the record, is exactly what Microsoft did when they wrote their web cmdlets for PowerShell 3).&lt;/p&gt;
+
+&lt;p&gt;So if you want to proactively avoid SSL errors, you have to set the ServerCertificateValidationCallback. For certain situations, it’s enough to just do this in PowerShell:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$url&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://csh.rit.edu&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$web&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;New-Object&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Net.WebClient&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;System.Net.&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ServicePointManager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ServerCertificateValidationCallback&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;$true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$output&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$web&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;DownloadString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;System.Net.&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ServicePointManager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ServerCertificateValidationCallback&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;$null&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note, that I set the ServerCertificateValidationCallback back to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$null&lt;/code&gt; when I was done – this restores normal validation, so I have, in effect, only disabled the validation for that one call (since PowerShell isn’t generally multi-threaded, I don’t normally have to worry about other threads being affeected). However, setting the ServerCertificateValidationCallback to a scriptblock won’t work for an asynchronous callback (one that happens on a task thread), because the other thread won’t have a runspace to execute the script on.  So, if you try to use the same technique with Invoke-WebRequest or Invoke-RestMethod instead of calling the .Net &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WebClient&lt;/code&gt; methods directly, you’ll just get a different error:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;The underlying connection was closed: An unexpected error occurred on a send.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you dig in a little bit, you’ll find that the InnerException of the error was:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;There is no Runspace available to run scripts in this thread.
+You can provide one in the DefaultRunspace property
+of the System.Management.Automation.Runspaces.Runspace type.
+The script block you attempted to invoke was:  $true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Obviously this approach doesn’t work at that point, and the Invoke-WebRequest cmdlet is not the only place which will call web APIs on background threads, so to make those cmdlets and APIs work, we need to write it in C# (and do so in a way that’s flexible enough that we can control it from PowerShell).&lt;/p&gt;
+
+&lt;p&gt;Additionally, simply returning true will disable all validation, and that’s not really a safe practice – it’s certainly not what you want to do all of the time. If you’re on .Net 4.5 or later, you can set the callback on the a raw HttpWebRequest and only affect that one request, but obviously that only works if you write your code at that low level, don’t use the PowerShell cmdlets, and are on the latest version of .Net – plus, you still have to write the logic that determines when that should happen.&lt;/p&gt;
+
+&lt;p&gt;The bottom line is that what we probably want is something like an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;insecure&lt;/code&gt; switch on the PowerShell cmdlets, so that we can make a specific request be insecure, and then when we were writing functions, we could just pass that parameter up to our functions.&lt;/p&gt;
+
+&lt;h1 id=&quot;custom-ssl-validator&quot;&gt;Custom SSL Validator&lt;/h1&gt;
+
+&lt;p&gt;There are several example validators on the &lt;a href=&quot;http://www.mono-project.com/UsingTrustedRootsRespectfully&quot;&gt;Using Trusted Roots Respectfully&lt;/a&gt; page from mono project, but I’m going to try to blend a few of those validators to give us the option of tuning the SSL validation to our specific needs.&lt;/p&gt;
+
+&lt;p&gt;The point is that I don’t want to weaken &lt;em&gt;all&lt;/em&gt; validation, I just want to trust a specific cert for a specific domain, or perhaps just ignore problems on one domain, or make one specific request regardless of whether the SSL certificate is valid or not.&lt;/p&gt;
+
+&lt;p&gt;Let’s look at the callback and see the information we have to work with:&lt;/p&gt;
+
+&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;TunableValidationCallback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X509Certificate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;certificate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X509Chain&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SslPolicyErrors&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sslPolicyErrors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The sender is usually going to be the WebRequest that was calling an https domain that failed validation.&lt;/li&gt;
+  &lt;li&gt;The certificate, of course, is the one the actually failed …&lt;/li&gt;
+  &lt;li&gt;The chain is the series of certificates that issued the original one, back to the root certificate authority, along with the trust information about them.&lt;/li&gt;
+  &lt;li&gt;The sslPolicyErrors tells us what went wrong: Was there no cert? Was the cert for the wrong domain? Was the root CA not trusted?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So, what I’ve written is first a check for the three main SSL errors, and a way to pre-emptively ignore them once, or post-humously trust a certificate that failed the first time, as well as some better error messages (which have to be output using Console.Error.WriteLine rather than Write-Error because they might be running on a background thread).&lt;/p&gt;
+
+&lt;p&gt;For now, that’s enough of an explanation, I’ve posted the &lt;a href=&quot;https://github.com/Jaykul/Tunable-SSL-Validator&quot;&gt;tunable SSL validator code to github&lt;/a&gt;, and this blog post as the ReadMe, where I’ll update it with more details if need be.&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="powershell" /><category term="ssl" /><category term="rest" /><category term="webrequest" /><summary type="html">In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them. If you don’t care about why I wrote it the way I wrote it, you can just check out the module on GitHub or install it with PoshCode or PowerShellGet by running:</summary></entry><entry><title type="html">A Fresh Start</title><link href="https://huddledmasses.org/2014/07/a-fresh-start/" rel="alternate" type="text/html" title="A Fresh Start" /><published>2014-07-24T01:02:43-04:00</published><updated>2014-07-24T01:02:43-04:00</updated><id>https://huddledmasses.org/2014/07/a-fresh-start</id><content type="html" xml:base="https://huddledmasses.org/2014/07/a-fresh-start/">&lt;p&gt;A few weeks ago, someone somehow injected a shell onto my WordPress powered blog site. They managed to get multiple hacking tools installed, delete files required for hosting, and who knows what else. Needless to say I was frustrated and upset. In fact, I was so frustrated that to get rid of it I just tore down the whole site.&lt;/p&gt;
+
+&lt;p&gt;I apologize for all the hundreds of broken links that are pointed at my domain right now. I have a database backup, but I want to try a few other blogging tools out, and I am not sure I can trust the downloads or even images on the old site – I don’t want to restore all the posts &lt;em&gt;and then&lt;/em&gt; find out the downloads are infected or the images have been replaced. Furthermore, when I stood up a new WordPress site, it did not perform well on my DreamHost server, and I started to wonder if I needed new hosting or new blogging tools.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-state-of-flux&quot;&gt;A state of flux&lt;/h2&gt;
+
+&lt;p&gt;In the end, I decided to try switching to a static site generator instead of a server-side blogging tool, so I went to &lt;a href=&quot;http://www.staticgen.com/&quot;&gt;StaticGen&lt;/a&gt; and I’ve started working my way through some of the many interesting options.  I’ll probably be switching back and forth between them over the coming days, so the site may change quite a bit (not just visually, but in permalinks, etc.) until I settle on one.&lt;/p&gt;
+
+&lt;p&gt;I also decided that I will not restore the database backup and deal with cleaning all the downloads that have accumulated in the last … almost 20 years of blogging (isn’t that crazy?).  Instead,  I will start over. I can still restore individual articles from my old blog by hand (at least the ones that people really are still looking for), and that will give me the chance to update the content and to convert them to markdown (yeah, I think textile lost that battle).&lt;/p&gt;
+
+&lt;p&gt;Please &lt;a href=&quot;/missing-content/&quot;&gt;let me know&lt;/a&gt; when you hit a missing page that you want back, and I’ll move that up my priority list.&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="site-news" /><summary type="html">A few weeks ago, someone somehow injected a shell onto my WordPress powered blog site. They managed to get multiple hacking tools installed, delete files required for hosting, and who knows what else. Needless to say I was frustrated and upset. In fact, I was so frustrated that to get rid of it I just tore down the whole site.</summary></entry><entry><title type="html">Missing Content</title><link href="https://huddledmasses.org/2014/07/missing-content/" rel="alternate" type="text/html" title="Missing Content" /><published>2014-07-22T12:02:18-04:00</published><updated>2014-07-22T12:02:18-04:00</updated><id>https://huddledmasses.org/2014/07/missing-content</id><content type="html" xml:base="https://huddledmasses.org/2014/07/missing-content/">&lt;p&gt;Since I’ve blown away all my old blog content, there are a lot of pages missing that were really useful.
+I’m going to bring the best of them back, and I have plans to actually rewrite some of the older ones to update them
+(part of the reason I let the old ones go is that some of them were so out-of-date that they might have been misleading).&lt;/p&gt;
+
+&lt;p&gt;If there is one or more of my old articles in particular that you’d like to see come back, please post a comment below!&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="site-news" /><category term="missing-content" /><summary type="html">Since I’ve blown away all my old blog content, there are a lot of pages missing that were really useful. I’m going to bring the best of them back, and I have plans to actually rewrite some of the older ones to update them (part of the reason I let the old ones go is that some of them were so out-of-date that they might have been misleading).</summary></entry><entry><title type="html">About Huddled Masses</title><link href="https://huddledmasses.org/2014/07/about-huddled-masses/" rel="alternate" type="text/html" title="About Huddled Masses" /><published>2014-07-21T01:02:18-04:00</published><updated>2014-07-21T01:02:18-04:00</updated><id>https://huddledmasses.org/2014/07/about-huddled-masses</id><content type="html" xml:base="https://huddledmasses.org/2014/07/about-huddled-masses/">&lt;p&gt;This is web site is dedicated to the musings of Joel Bennett (aka Jaykul)
+about technology, software, software development, the web, and the world.&lt;/p&gt;
+
+&lt;p&gt;Any resemblance of the views expressed and the views of my employer, my terminal, or the view out my window
+are purely coincidental. The resemblance between them and my own views is non-deterministic.
+The question of the existence of views in the absence of anyone to hold them is left as an exercise for the reader.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-man-of-many-hats&quot;&gt;The Man of Many Hats&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Not like the companies of worldwide fame,&lt;br /&gt;
+Whose orchestrated clouds cover the land;&lt;br /&gt;
+Here on our dark-themed pages shall stand&lt;br /&gt;
+A lone individual with code in hand,&lt;br /&gt;
+Systems and software obey their command,&lt;br /&gt;
+DevOps Engineer.&lt;br /&gt;
+&lt;br /&gt;
+– Joel Bennett&lt;br /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;With apologies to Emma Lazarus:&lt;/p&gt;
+
+&lt;h2 id=&quot;the-new-colossus&quot;&gt;The New Colossus&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Not like the brazen giant of Greek fame,&lt;br /&gt;
+With conquering limbs astride from land to land;&lt;br /&gt;
+Here at our sea-washed, sunset gates shall stand&lt;br /&gt;
+A mighty woman with a torch, whose flame&lt;br /&gt;
+Is the imprisoned lightning, and her name&lt;br /&gt;
+Mother of Exiles. From her beacon-hand&lt;br /&gt;
+Glows world-wide welcome; her mild eyes command&lt;br /&gt;
+The air-bridged harbor that twin cities frame.&lt;br /&gt;
+“Keep ancient lands, your storied pomp!” cries she&lt;br /&gt;
+With silent lips. “Give me your tired, your poor,&lt;br /&gt;
+Your huddled masses yearning to breathe free,&lt;br /&gt;
+The wretched refuse of your teeming shore.&lt;br /&gt;
+Send these, the homeless, tempest-tost to me,&lt;br /&gt;
+I lift my lamp beside the golden door!”&lt;br /&gt;
+&lt;br /&gt;
+– Emma Lazarus&lt;br /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;Please Note:&lt;/strong&gt; I occasionally link to things I think are great.
+When I do, I occasionally find a “referral code” so I can make a little cash.
+I promise that I don’t link to anything just because of the cash
+(I wouldn’t cross the street for the amount of cash those links bring in, never mind write a whole blog post),
+and I promise I won’t let anyone buy links in my blog content …
+but I do not promise that things I link to will stay great as time passes,
+nor that you will agree with me about their greatness!&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="site-news" /><summary type="html">This is web site is dedicated to the musings of Joel Bennett (aka Jaykul) about technology, software, software development, the web, and the world.</summary></entry></feed>
