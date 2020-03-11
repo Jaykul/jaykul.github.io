@@ -1,3 +1,10 @@
+# Ruby Gem
+*.gem
+.bundle
+Gemfile.lock
+vendor/bundle
+
+# Jekyll generated files
 _site/
 .sass-cache/
 .jekyll-cache/
