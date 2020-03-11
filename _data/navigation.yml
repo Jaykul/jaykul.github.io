@@ -1,0 +1,14 @@
+# main links
+main:
+  - title: About Me
+    url: "2014/07/about-huddled-masses"
+  - title: Resume
+    url: "/Resume-ShortForm.pdf"
+  - title: PowerLine
+    url: "https://github.com/Jaykul/PowerLine/"
+  - title: PANSIES
+    url: "https://github.com/PoshCode/PANSIES/"
+  - title: ShowUI
+    url: "https://github.com/ShowUI/ShowUI"
+  - title: PoshConsole
+    url: "https://github.com/Jaykul/PoshConsole/"
