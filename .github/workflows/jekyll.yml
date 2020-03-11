@@ -2,9 +2,7 @@ name: Jekyll site CI
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ jekyll-source ]
 
 jobs:
   build:
@@ -12,9 +10,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout jekyll-source
+      uses: actions/checkout@v2
+      with:
+        ref: 'jekyll-source'
+        path: 'source'
+
     - name: Build the site in the jekyll/builder container
       run: |
         docker run \
-        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+        -v ${{ github.workspace }}/source:/srv/jekyll -v ${{ github.workspace }}/source/_site:/srv/jekyll/_site \
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+
+    - name: Cloning master branch
+      uses: actions/checkout@v2
+      with:
+        ref: 'master'
+        path: 'master'
+
+    - name: Copying _site content to master branch repo
+      run: cp -R ${{ github.workspace }}/source/_site/* ${{ github.workspace }}/master
+
+    - name: Commit files
+      run: |
+        cd ${{ github.workspace }}/master
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add *
+        git commit -m "New changes" -a
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        directory: ${{ github.workspace }}/master
+        branch: 'master'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
