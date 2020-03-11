@@ -191,7 +191,7 @@ lsi: false
 excerpt_separator: "\n\n"
 incremental: false
 
-
+github: [metadata]
 # Markdown Processing
 kramdown:
   input: GFM
@@ -211,7 +211,7 @@ sass:
 
 
 # Outputting
-permalink:  /:year/:month/:title/ # /:categories/:title/ #/:year-:month-:day-:title/
+permalink: /:year/:month/:title/ # /:categories/:title/ #/:year-:month-:day-:title/
 paginate: 10 # amount of posts to show
 paginate_path: /page:num/
 timezone: America/New_York # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -224,7 +224,7 @@ plugins:
   - jekyll-gist
   - jekyll-feed
   - jekyll-include-cache
-#  - jekyll-archives
+  - jekyll-archives
 
 # mimic GitHub Pages with --safe
 whitelist:
@@ -233,7 +233,7 @@ whitelist:
   - jekyll-gist
   - jekyll-feed
   - jekyll-include-cache
-#  - jekyll-archives
+  - jekyll-archives
 
 # Archives
 #  Type
@@ -246,22 +246,25 @@ whitelist:
 #  - <base_path>/categories/my-awesome-category/index.html ~> path: /categories/
 #  - <base_path>/my-awesome-category/index.html ~> path: /
 category_archive:
-  type: liquid
+  type: jekyll-archives
   path: /categories/
 tag_archive:
-  type: liquid
+  type: jekyll-archives
   path: /tags/
-# # https://github.com/jekyll/jekyll-archives
-# jekyll-archives:
-#   enabled:
-#     - categories
-#     - tags
-#   layouts:
-#     category: archive-taxonomy
-#     tag: archive-taxonomy
-#   permalinks:
-#     category: /categories/:name/
-#     tag: /tags/:name/
+
+# https://github.com/jekyll/jekyll-archives
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+    - year
+    - month
+  layout: archive-taxonomy
+  permalinks:
+    category: /categories/:name/
+    tag: /tags/:name/
+    year: '/:year/'
+    month: '/:year/:month/'
 
 # Defaults
 defaults:
