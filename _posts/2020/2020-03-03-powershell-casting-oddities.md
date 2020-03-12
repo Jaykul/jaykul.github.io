@@ -153,7 +153,7 @@ What if you're dealing with a class like that User one up above, that someone el
 
 You can even write it in pure PowerShell:
 
-```PowerShell
+```powershell
 class UserConverter : System.Management.Automation.PSTypeConverter {
     [bool] CanConvertFrom([PSObject]$psSourceValue, [Type]$destinationType) {
         # Is it an integer number we're trying to convert to a user?
