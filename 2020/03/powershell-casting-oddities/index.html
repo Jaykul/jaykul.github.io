@@ -517,33 +517,33 @@
 
 <p>You can even write it in pure PowerShell:</p>
 
-<pre><code class="language-PowerShell">class UserConverter : System.Management.Automation.PSTypeConverter {
-    [bool] CanConvertFrom([PSObject]$psSourceValue, [Type]$destinationType) {
-        # Is it an integer number we're trying to convert to a user?
-        # NOTE: we're claiming we can convert any integer, but really we can't convert anything bigger than uint
-        return $psSourceValue -eq ($psSourceValue -as [int64]) -and $destinationType -eq [User]
-    }
-    [object] ConvertFrom([PSObject]$psSourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
-        return [User]::new([uint]$psSourceValue)
-    }
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">class</span><span class="w"> </span><span class="nc">UserConverter</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="err">.</span><span class="nc">Management</span><span class="err">.</span><span class="nc">Automation</span><span class="err">.</span><span class="nc">PSTypeConverter</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">[</span><span class="kt">bool</span><span class="p">]</span><span class="w"> </span><span class="nf">CanConvertFrom</span><span class="p">([</span><span class="kt">PSObject</span><span class="p">]</span><span class="nv">$psSourceValue</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Type</span><span class="p">]</span><span class="nv">$destinationType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="c"># Is it an integer number we're trying to convert to a user?</span><span class="w">
+        </span><span class="c"># NOTE: we're claiming we can convert any integer, but really we can't convert anything bigger than uint</span><span class="w">
+        </span><span class="kr">return</span><span class="w"> </span><span class="nv">$psSourceValue</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="p">(</span><span class="nv">$psSourceValue</span><span class="w"> </span><span class="o">-as</span><span class="w"> </span><span class="p">[</span><span class="kt">int64</span><span class="p">])</span><span class="w"> </span><span class="o">-and</span><span class="w"> </span><span class="nv">$destinationType</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="p">[</span><span class="kt">User</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">[</span><span class="kt">object</span><span class="p">]</span><span class="w"> </span><span class="nf">ConvertFrom</span><span class="p">([</span><span class="kt">PSObject</span><span class="p">]</span><span class="nv">$psSourceValue</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Type</span><span class="p">]</span><span class="nv">$destinationType</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">IFormatProvider</span><span class="p">]</span><span class="nv">$formatProvider</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">bool</span><span class="p">]</span><span class="nv">$ignoreCase</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="kr">return</span><span class="w"> </span><span class="p">[</span><span class="kt">User</span><span class="p">]::</span><span class="nf">new</span><span class="p">([</span><span class="kt">uint</span><span class="p">]</span><span class="nv">$psSourceValue</span><span class="p">)</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 
-    # The rest of the methods are implemented by calling one of those first two methods:
-    [bool] CanConvertFrom([object]$sourceValue, [Type]$destinationType) {
-        return $this.CanConvertTo($sourceValue, $destinationType)
-    }
-    [bool] CanConvertTo([object]$sourceValue, [Type]$destinationType) {
-        return $this.CanConvertTo(([PSObject]$sourceValue), $destinationType)
-    }
-    [object] ConvertFrom([object]$sourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
-        return $this.ConvertFrom(([PSObject]$sourceValue), $destinationType, $formatProvider, $ignoreCase)
-    }
-    [object] ConvertTo([object]$sourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
-        return $this.ConvertFrom(([PSObject]$sourceValue), $destinationType, $formatProvider, $ignoreCase)
-    }
-}
+    </span><span class="c"># The rest of the methods are implemented by calling one of those first two methods:</span><span class="w">
+    </span><span class="p">[</span><span class="kt">bool</span><span class="p">]</span><span class="w"> </span><span class="nf">CanConvertFrom</span><span class="p">([</span><span class="kt">object</span><span class="p">]</span><span class="nv">$sourceValue</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Type</span><span class="p">]</span><span class="nv">$destinationType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="kr">return</span><span class="w"> </span><span class="bp">$this</span><span class="o">.</span><span class="nf">CanConvertTo</span><span class="p">(</span><span class="nv">$sourceValue</span><span class="p">,</span><span class="w"> </span><span class="nv">$destinationType</span><span class="p">)</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">[</span><span class="kt">bool</span><span class="p">]</span><span class="w"> </span><span class="nf">CanConvertTo</span><span class="p">([</span><span class="kt">object</span><span class="p">]</span><span class="nv">$sourceValue</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Type</span><span class="p">]</span><span class="nv">$destinationType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="kr">return</span><span class="w"> </span><span class="bp">$this</span><span class="o">.</span><span class="nf">CanConvertTo</span><span class="p">(([</span><span class="kt">PSObject</span><span class="p">]</span><span class="nv">$sourceValue</span><span class="p">),</span><span class="w"> </span><span class="nv">$destinationType</span><span class="p">)</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">[</span><span class="kt">object</span><span class="p">]</span><span class="w"> </span><span class="nf">ConvertFrom</span><span class="p">([</span><span class="kt">object</span><span class="p">]</span><span class="nv">$sourceValue</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Type</span><span class="p">]</span><span class="nv">$destinationType</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">IFormatProvider</span><span class="p">]</span><span class="nv">$formatProvider</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">bool</span><span class="p">]</span><span class="nv">$ignoreCase</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="kr">return</span><span class="w"> </span><span class="bp">$this</span><span class="o">.</span><span class="nf">ConvertFrom</span><span class="p">(([</span><span class="kt">PSObject</span><span class="p">]</span><span class="nv">$sourceValue</span><span class="p">),</span><span class="w"> </span><span class="nv">$destinationType</span><span class="p">,</span><span class="w"> </span><span class="nv">$formatProvider</span><span class="p">,</span><span class="w"> </span><span class="nv">$ignoreCase</span><span class="p">)</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">[</span><span class="kt">object</span><span class="p">]</span><span class="w"> </span><span class="nf">ConvertTo</span><span class="p">([</span><span class="kt">object</span><span class="p">]</span><span class="nv">$sourceValue</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">Type</span><span class="p">]</span><span class="nv">$destinationType</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">IFormatProvider</span><span class="p">]</span><span class="nv">$formatProvider</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="kt">bool</span><span class="p">]</span><span class="nv">$ignoreCase</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="kr">return</span><span class="w"> </span><span class="bp">$this</span><span class="o">.</span><span class="nf">ConvertFrom</span><span class="p">(([</span><span class="kt">PSObject</span><span class="p">]</span><span class="nv">$sourceValue</span><span class="p">),</span><span class="w"> </span><span class="nv">$destinationType</span><span class="p">,</span><span class="w"> </span><span class="nv">$formatProvider</span><span class="p">,</span><span class="w"> </span><span class="nv">$ignoreCase</span><span class="p">)</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
 
-Update-TypeData -TypeName 'User' -TypeConverter 'UserConverter' -Force
-</code></pre>
+</span><span class="nf">Update-TypeData</span><span class="w"> </span><span class="nt">-TypeName</span><span class="w"> </span><span class="s1">'User'</span><span class="w"> </span><span class="nt">-TypeConverter</span><span class="w"> </span><span class="s1">'UserConverter'</span><span class="w"> </span><span class="nt">-Force</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Ironically, if you use the type <code class="language-plaintext highlighter-rouge">[uint]</code> instead of <code class="language-plaintext highlighter-rouge">[int64]</code> in the <code class="language-plaintext highlighter-rouge">CanConvertFrom</code> method, the test will be more truthful (it won’t claim it can convert numbers that are actually too big or too small to be converted), but the result will be unexpected: if you try to convert, say, the number <code class="language-plaintext highlighter-rouge">4294967296</code> the TypeConverter will admit it can’t do the job, and PowerShell will convert it using string constructor, just as it would have <em>without</em> the TypeConverter.</p>
 
