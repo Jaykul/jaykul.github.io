@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://huddledmasses.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://huddledmasses.org/" rel="alternate" type="text/html" /><updated>2020-03-12T00:54:40-04:00</updated><id>https://huddledmasses.org/feed.xml</id><title type="html">Huddled Masses</title><subtitle>Personal projects and blog posts by Joel &quot;Jaykul&quot; Bennett</subtitle><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><entry><title type="html">PowerShell Casting Oddities</title><link href="https://huddledmasses.org/2020/03/powershell-casting-oddities/" rel="alternate" type="text/html" title="PowerShell Casting Oddities" /><published>2020-03-03T00:00:00-05:00</published><updated>2020-03-03T00:00:00-05:00</updated><id>https://huddledmasses.org/2020/03/powershell-casting-oddities</id><content type="html" xml:base="https://huddledmasses.org/2020/03/powershell-casting-oddities/">&lt;h2 id=&quot;powershells-casting-can-result-in-some-weird-results&quot;&gt;PowerShell’s casting can result in some weird results.&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://huddledmasses.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://huddledmasses.org/" rel="alternate" type="text/html" /><updated>2020-03-12T03:05:16-04:00</updated><id>https://huddledmasses.org/feed.xml</id><title type="html">Huddled Masses</title><subtitle>Personal projects and blog posts by Joel &quot;Jaykul&quot; Bennett</subtitle><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><entry><title type="html">PowerShell Casting Oddities</title><link href="https://huddledmasses.org/2020/03/powershell-casting-oddities/" rel="alternate" type="text/html" title="PowerShell Casting Oddities" /><published>2020-03-03T00:00:00-05:00</published><updated>2020-03-03T00:00:00-05:00</updated><id>https://huddledmasses.org/2020/03/powershell-casting-oddities</id><content type="html" xml:base="https://huddledmasses.org/2020/03/powershell-casting-oddities/">&lt;h2 id=&quot;powershells-casting-can-result-in-some-weird-results&quot;&gt;PowerShell’s casting can result in some weird results.&lt;/h2&gt;
 
 &lt;p&gt;Before we begin, check out this C# class:&lt;/p&gt;
 
@@ -6,20 +6,20 @@
 &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;c1&quot;&gt;// The user's id (e.g.: StackOverflow id, employee number, or whatever)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UInt32&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
     &lt;span class=&quot;c1&quot;&gt;// The user's name (for display). First and last, nickname, whatever.&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
     &lt;span class=&quot;c1&quot;&gt;// The user's email (for auth and communications)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
     &lt;span class=&quot;c1&quot;&gt;// Get the user from the datastore by Id&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UInt32&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
     &lt;span class=&quot;c1&quot;&gt;// Create a new user from their email&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;Email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
@@ -68,23 +68,33 @@
 
 &lt;p&gt;The reason for this is actually straightforward, but it’s due to a combination of reasons that aren’t intuitive.&lt;/p&gt;
 
-&lt;p&gt;The bottom line is that the numeric constructor we might have &lt;em&gt;thought&lt;/em&gt; we were calling accepts a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint&lt;/code&gt; (an unsigned int), rather than a signed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt;, and literal numbers in PowerShell are always &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[int]&lt;/code&gt; (or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[double]&lt;/code&gt; if they have a decimal place).&lt;/p&gt;
+&lt;p&gt;The bottom line is that the numeric constructor we might have &lt;em&gt;thought&lt;/em&gt; we were calling accepts a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint&lt;/code&gt; (an unsigned int), rather than a signed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt;, and literal numbers in PowerShell are always &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[int]&lt;/code&gt; (or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[double]&lt;/code&gt; if they have a decimal place) unless you add a suffix.&lt;/p&gt;
 
-&lt;p&gt;PowerShell (well, programming languages in genera) won’t cast &lt;em&gt;implicitly&lt;/em&gt; if it looses information. Implicit casting is when you try to pass a value to a method (or function) that accepts a different type of value. Explicit casting is when you specify the type by writing it out.&lt;/p&gt;
+&lt;h3 id=&quot;a-little-background&quot;&gt;A little background.&lt;/h3&gt;
 
-&lt;p&gt;So for instance, a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; will cast &lt;em&gt;implicitly&lt;/em&gt; to a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;double&lt;/code&gt;, but not the other way around, because you would loose the fractional value. You can still cast it &lt;em&gt;explicitly&lt;/em&gt;, by just specifying &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[double]&lt;/code&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;In programming, “casting” is when you convert an object from one type to another. We talk about “implicit casting” when you set a variable of one type with a value of another, or pass a value to a method (or function) that accepts a different type of value, and the language converts it from one to the other &lt;em&gt;for&lt;/em&gt; you without you asking for that. We talk about “explicit casting” when you specify the type you want to convert to:&lt;/p&gt;
 
-&lt;p&gt;PowerShell simply won’t call the method that accepts an unsigned int unless you specifically cast the number to an unsigned int. As far as syntax, you can double-cast it:&lt;/p&gt;
+  &lt;p&gt;In general, programming languages (including PowerShell) prefer not to cast &lt;em&gt;implicitly&lt;/em&gt; if it’s possible that you’ll lose information. So you can implicitly cast from a smaller to a bigger type (e.g. 32bit integer to 64bit), or from 16bit unsigned to 32bit signed, but not to a smaller type (32bit to 16bit integer), or signed to unsigned.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In this case, our numbers are integers, so PowerShell won’t &lt;em&gt;implicitly&lt;/em&gt; cast them to an unsigned integer, and won’t call the method that accepts an unsigned int unless you explicitly make the number an unsigned int.&lt;/p&gt;
+
+&lt;p&gt;As usual with PowerShell, there are several ways to do that.&lt;/p&gt;
+
+&lt;p&gt;You can specify the type of numbers with a suffix (see &lt;a href=&quot;https://docs.microsoft.com/en-us/powershell/module/Microsoft.PowerShell.Core/About/about_numeric_literals?view=powershell-7&quot;&gt;about numeric literals&lt;/a&gt;) and then cast it or call the constructor:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Or you can cast it to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint&lt;/code&gt;  and then either cast it again to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;User&lt;/code&gt; or call the constructor. Either way, if you explicitly specify the type, PowerShell assumes you understand what you’re doing, and lets you.&lt;/p&gt;
 
 &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Or you can call the constructor more explicitly. An &lt;em&gt;explicit&lt;/em&gt; cast is one where you specify the type name that you want to cast to. When you specify the type like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[uint]&lt;/code&gt; then PowerShell assumes you understand what you’re doing.&lt;/p&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Either way, you’ll get a user with an Id but no Name or Email.&lt;/p&gt;
+&lt;p&gt;And in any of those cases, you’ll get a user with just the Id set.&lt;/p&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Id Name Email
 -- ---- --------
@@ -99,7 +109,69 @@
 
 &lt;p&gt;The reason is &lt;em&gt;yet another&lt;/em&gt; PowerShell casting oddity: PowerShell can (and will) cast &lt;em&gt;anything&lt;/em&gt; to a string implicitly, by calling it’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ToString()&lt;/code&gt; method. That’s really convenient in a shell, where you regularly want to &lt;em&gt;display&lt;/em&gt; things as strings, but sometimes… well, something like this happens.&lt;/p&gt;
 
-&lt;p&gt;In other words, PowerShell &lt;em&gt;will&lt;/em&gt; implicitly cast an integer to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;string&lt;/code&gt;, but &lt;em&gt;will not&lt;/em&gt; cast implicitly it to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint&lt;/code&gt; – so you get an unexpected constructor and result.&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="powershell" /><category term="powershell" /><category term="classes" /><category term="casting" /><summary type="html">PowerShell’s casting can result in some weird results.</summary></entry><entry><title type="html">How the developer’s brain works</title><link href="https://huddledmasses.org/2014/10/developer-brain/" rel="alternate" type="text/html" title="How the developer's brain works" /><published>2014-10-27T05:47:43-04:00</published><updated>2014-10-27T05:47:43-04:00</updated><id>https://huddledmasses.org/2014/10/developer-brain</id><content type="html" xml:base="https://huddledmasses.org/2014/10/developer-brain/">&lt;ol&gt;
+&lt;p&gt;In other words, PowerShell &lt;em&gt;will&lt;/em&gt; implicitly cast an integer to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;string&lt;/code&gt;, but &lt;em&gt;will not&lt;/em&gt; cast implicitly it to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uint&lt;/code&gt; – so you get an unexpected constructor and result.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-few-notes-on-designing-types-for-powershell&quot;&gt;A few notes on designing types for PowerShell&lt;/h2&gt;
+
+&lt;h3 id=&quot;use-powershells-natural-types&quot;&gt;Use PowerShell’s natural types&lt;/h3&gt;
+
+&lt;p&gt;While it’s fine to use whatever type you want for a property (remember that the hashtable constructor works fine), it’s best to avoid unsigned integers and other types that won’t cast automatically in constructors or methods. That’s also true for types like generic lists. PowerShell has native syntax for arrays, but not for generic collections, and it will unroll generic collections and turn them into arrays if you output them anyway, so it’s usually better in types we write for PowerShell to use arrays at the interface.&lt;/p&gt;
+
+&lt;p&gt;One option is to write the class using the “right” types as properties, including unsigned integers or generic collections, but to add a constructor that takes an integer or an array, etc.&lt;/p&gt;
+
+&lt;p&gt;For example, in this case, we could add this constructor:&lt;/p&gt;
+
+&lt;div class=&quot;language-csharp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Int64&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ArgumentOutOfRangeException&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;id must be a positive integer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UInt32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MaxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ArgumentOutOfRangeException&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;id must be less than or equal to &quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MaxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;While it may be a little complicated to write the converting constructor (and you have to think of things like needing to up-size to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int64&lt;/code&gt; in order to accept the maximum value of an unsigned int), this will make it “just work” for users without needing to specify the type suffix.&lt;/p&gt;
+
+&lt;h3 id=&quot;write-type-converters&quot;&gt;Write Type Converters&lt;/h3&gt;
+
+&lt;p&gt;What if you’re dealing with a class like that User one up above, that someone else wrote – whether in a 3rd party API or in the .NET framework. The bottom line is that if you are getting integer input from users and you want it to just work, but you can’t modify the class because it came from someone else, you can write a &lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.pstypeconverter&quot;&gt;PSTypeConverter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can even write it in pure PowerShell:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;class UserConverter : System.Management.Automation.PSTypeConverter {
+    [bool] CanConvertFrom([PSObject]$psSourceValue, [Type]$destinationType) {
+        # Is it an integer number we're trying to convert to a user?
+        # NOTE: we're claiming we can convert any integer, but really we can't convert anything bigger than uint
+        return $psSourceValue -eq ($psSourceValue -as [int64]) -and $destinationType -eq [User]
+    }
+    [object] ConvertFrom([PSObject]$psSourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
+        return [User]::new([uint]$psSourceValue)
+    }
+
+    # The rest of the methods are implemented by calling one of those first two methods:
+    [bool] CanConvertFrom([object]$sourceValue, [Type]$destinationType) {
+        return $this.CanConvertTo($sourceValue, $destinationType)
+    }
+    [bool] CanConvertTo([object]$sourceValue, [Type]$destinationType) {
+        return $this.CanConvertTo(([PSObject]$sourceValue), $destinationType)
+    }
+    [object] ConvertFrom([object]$sourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
+        return $this.ConvertFrom(([PSObject]$sourceValue), $destinationType, $formatProvider, $ignoreCase)
+    }
+    [object] ConvertTo([object]$sourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
+        return $this.ConvertFrom(([PSObject]$sourceValue), $destinationType, $formatProvider, $ignoreCase)
+    }
+}
+
+Update-TypeData -TypeName 'User' -TypeConverter 'UserConverter' -Force
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ironically, if you use the type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[uint]&lt;/code&gt; instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[int64]&lt;/code&gt; in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CanConvertFrom&lt;/code&gt; method, the test will be more truthful (it won’t claim it can convert numbers that are actually too big or too small to be converted), but the result will be unexpected: if you try to convert, say, the number &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;4294967296&lt;/code&gt; the TypeConverter will admit it can’t do the job, and PowerShell will convert it using string constructor, just as it would have &lt;em&gt;without&lt;/em&gt; the TypeConverter.&lt;/p&gt;
+
+&lt;p&gt;In other words, to get the behavior we want, we write the TypeConverter to lie, and claim it can convert any integer value, which will result in exceptions being thrown when those numbers &lt;em&gt;can’t&lt;/em&gt; actually be converted to unsigned integers. Which, of course, is the behavior that we want (and matches the behavior of the integer constructor).&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="powershell" /><category term="powershell" /><category term="classes" /><category term="casting" /><summary type="html">PowerShell’s casting can result in some weird results.</summary></entry><entry><title type="html">How the developer’s brain works</title><link href="https://huddledmasses.org/2014/10/developer-brain/" rel="alternate" type="text/html" title="How the developer's brain works" /><published>2014-10-27T05:47:43-04:00</published><updated>2014-10-27T05:47:43-04:00</updated><id>https://huddledmasses.org/2014/10/developer-brain</id><content type="html" xml:base="https://huddledmasses.org/2014/10/developer-brain/">&lt;ol&gt;
   &lt;li&gt;I need to finish &lt;a href=&quot;https://GitHub.com/PoshCode/PoshCode&quot;&gt;the PoshCode module&lt;/a&gt;, so I start working on that …&lt;/li&gt;
   &lt;li&gt;I realize the “Configuration” module that is inside PoshCode, is actually more important than PoshCode (that is, I think more developers will use it, because even PowerShellGet users need this)&lt;/li&gt;
   &lt;li&gt;I decide to separate the Configuration module project and fully test it.&lt;/li&gt;

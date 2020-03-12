@@ -30,7 +30,7 @@ var store = [{
         "teaser": null
       },{
         "title": "PowerShell Casting Oddities",
-        "excerpt":"PowerShell’s casting can result in some weird results. Before we begin, check out this C# class: using System; public class User { // The user's id (e.g.: StackOverflow id, employee number, or whatever) public UInt32 Id { get; set; } // The user's name (for display). First and last, nickname,...","categories": ["powershell"],
+        "excerpt":"PowerShell’s casting can result in some weird results. Before we begin, check out this C# class: using System; public class User { // The user's id (e.g.: StackOverflow id, employee number, or whatever) public uint Id { get; set; } // The user's name (for display). First and last, nickname,...","categories": ["powershell"],
         "tags": ["powershell","classes","casting"],
         "url": "https://huddledmasses.org/2020/03/powershell-casting-oddities/",
         "teaser": null

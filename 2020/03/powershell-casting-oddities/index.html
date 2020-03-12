@@ -365,7 +365,7 @@
 
 
 
-  3 minute read
+  6 minute read
 
 </p>
           
@@ -382,20 +382,20 @@
 <span class="k">public</span> <span class="k">class</span> <span class="nc">User</span>
 <span class="p">{</span>
     <span class="c1">// The user's id (e.g.: StackOverflow id, employee number, or whatever)</span>
-    <span class="k">public</span> <span class="n">UInt32</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">uint</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
     <span class="c1">// The user's name (for display). First and last, nickname, whatever.</span>
-    <span class="k">public</span> <span class="n">String</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
     <span class="c1">// The user's email (for auth and communications)</span>
-    <span class="k">public</span> <span class="n">String</span> <span class="n">Email</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Email</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
     <span class="c1">// Get the user from the datastore by Id</span>
-    <span class="k">public</span> <span class="nf">User</span><span class="p">(</span><span class="n">UInt32</span> <span class="n">id</span><span class="p">)</span>
+    <span class="k">public</span> <span class="nf">User</span><span class="p">(</span><span class="kt">uint</span> <span class="n">id</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="n">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span>
     <span class="p">}</span>
 
     <span class="c1">// Create a new user from their email</span>
-    <span class="k">public</span> <span class="nf">User</span><span class="p">(</span><span class="n">String</span> <span class="n">email</span><span class="p">)</span>
+    <span class="k">public</span> <span class="nf">User</span><span class="p">(</span><span class="kt">string</span> <span class="n">email</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="n">Email</span> <span class="p">=</span> <span class="n">email</span><span class="p">;</span>
     <span class="p">}</span>
@@ -444,23 +444,33 @@
 
 <p>The reason for this is actually straightforward, but it’s due to a combination of reasons that aren’t intuitive.</p>
 
-<p>The bottom line is that the numeric constructor we might have <em>thought</em> we were calling accepts a <code class="language-plaintext highlighter-rouge">uint</code> (an unsigned int), rather than a signed <code class="language-plaintext highlighter-rouge">int</code>, and literal numbers in PowerShell are always <code class="language-plaintext highlighter-rouge">[int]</code> (or <code class="language-plaintext highlighter-rouge">[double]</code> if they have a decimal place).</p>
+<p>The bottom line is that the numeric constructor we might have <em>thought</em> we were calling accepts a <code class="language-plaintext highlighter-rouge">uint</code> (an unsigned int), rather than a signed <code class="language-plaintext highlighter-rouge">int</code>, and literal numbers in PowerShell are always <code class="language-plaintext highlighter-rouge">[int]</code> (or <code class="language-plaintext highlighter-rouge">[double]</code> if they have a decimal place) unless you add a suffix.</p>
 
-<p>PowerShell (well, programming languages in genera) won’t cast <em>implicitly</em> if it looses information. Implicit casting is when you try to pass a value to a method (or function) that accepts a different type of value. Explicit casting is when you specify the type by writing it out.</p>
+<h3 id="a-little-background">A little background.</h3>
 
-<p>So for instance, a <code class="language-plaintext highlighter-rouge">int</code> will cast <em>implicitly</em> to a <code class="language-plaintext highlighter-rouge">double</code>, but not the other way around, because you would loose the fractional value. You can still cast it <em>explicitly</em>, by just specifying <code class="language-plaintext highlighter-rouge">[double]</code>.</p>
+<blockquote>
+  <p>In programming, “casting” is when you convert an object from one type to another. We talk about “implicit casting” when you set a variable of one type with a value of another, or pass a value to a method (or function) that accepts a different type of value, and the language converts it from one to the other <em>for</em> you without you asking for that. We talk about “explicit casting” when you specify the type you want to convert to:</p>
 
-<p>PowerShell simply won’t call the method that accepts an unsigned int unless you specifically cast the number to an unsigned int. As far as syntax, you can double-cast it:</p>
+  <p>In general, programming languages (including PowerShell) prefer not to cast <em>implicitly</em> if it’s possible that you’ll lose information. So you can implicitly cast from a smaller to a bigger type (e.g. 32bit integer to 64bit), or from 16bit unsigned to 32bit signed, but not to a smaller type (32bit to 16bit integer), or signed to unsigned.</p>
+</blockquote>
+
+<p>In this case, our numbers are integers, so PowerShell won’t <em>implicitly</em> cast them to an unsigned integer, and won’t call the method that accepts an unsigned int unless you explicitly make the number an unsigned int.</p>
+
+<p>As usual with PowerShell, there are several ways to do that.</p>
+
+<p>You can specify the type of numbers with a suffix (see <a href="https://docs.microsoft.com/en-us/powershell/module/Microsoft.PowerShell.Core/About/about_numeric_literals?view=powershell-7">about numeric literals</a>) and then cast it or call the constructor:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">User</span><span class="p">]</span><span class="mi">2</span><span class="nf">u</span><span class="w">
+</span><span class="p">[</span><span class="kt">User</span><span class="p">]::</span><span class="nf">new</span><span class="p">(</span><span class="mi">2</span><span class="nf">u</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Or you can cast it to <code class="language-plaintext highlighter-rouge">uint</code>  and then either cast it again to <code class="language-plaintext highlighter-rouge">User</code> or call the constructor. Either way, if you explicitly specify the type, PowerShell assumes you understand what you’re doing, and lets you.</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">User</span><span class="p">][</span><span class="kt">uint</span><span class="p">]</span><span class="mi">2</span><span class="w">
+</span><span class="p">[</span><span class="kt">User</span><span class="p">]::</span><span class="nf">new</span><span class="p">([</span><span class="kt">uint</span><span class="p">]</span><span class="mi">2</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Or you can call the constructor more explicitly. An <em>explicit</em> cast is one where you specify the type name that you want to cast to. When you specify the type like <code class="language-plaintext highlighter-rouge">[uint]</code> then PowerShell assumes you understand what you’re doing.</p>
-
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">User</span><span class="p">]::</span><span class="nf">new</span><span class="p">([</span><span class="kt">uint</span><span class="p">]</span><span class="mi">2</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div>
-
-<p>Either way, you’ll get a user with an Id but no Name or Email.</p>
+<p>And in any of those cases, you’ll get a user with just the Id set.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Id Name Email
 -- ---- --------
@@ -476,6 +486,68 @@
 <p>The reason is <em>yet another</em> PowerShell casting oddity: PowerShell can (and will) cast <em>anything</em> to a string implicitly, by calling it’s <code class="language-plaintext highlighter-rouge">ToString()</code> method. That’s really convenient in a shell, where you regularly want to <em>display</em> things as strings, but sometimes… well, something like this happens.</p>
 
 <p>In other words, PowerShell <em>will</em> implicitly cast an integer to <code class="language-plaintext highlighter-rouge">string</code>, but <em>will not</em> cast implicitly it to <code class="language-plaintext highlighter-rouge">uint</code> – so you get an unexpected constructor and result.</p>
+
+<h2 id="a-few-notes-on-designing-types-for-powershell">A few notes on designing types for PowerShell</h2>
+
+<h3 id="use-powershells-natural-types">Use PowerShell’s natural types</h3>
+
+<p>While it’s fine to use whatever type you want for a property (remember that the hashtable constructor works fine), it’s best to avoid unsigned integers and other types that won’t cast automatically in constructors or methods. That’s also true for types like generic lists. PowerShell has native syntax for arrays, but not for generic collections, and it will unroll generic collections and turn them into arrays if you output them anyway, so it’s usually better in types we write for PowerShell to use arrays at the interface.</p>
+
+<p>One option is to write the class using the “right” types as properties, including unsigned integers or generic collections, but to add a constructor that takes an integer or an array, etc.</p>
+
+<p>For example, in this case, we could add this constructor:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">public</span> <span class="nf">User</span><span class="p">(</span><span class="n">Int64</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">&lt;</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentOutOfRangeException</span><span class="p">(</span><span class="s">"id"</span><span class="p">,</span><span class="s">"id must be a positive integer"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">&gt;</span> <span class="n">UInt32</span><span class="p">.</span><span class="n">MaxValue</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">ArgumentOutOfRangeException</span><span class="p">(</span><span class="s">"id"</span><span class="p">,</span><span class="s">"id must be less than or equal to "</span> <span class="p">+</span> <span class="kt">uint</span><span class="p">.</span><span class="n">MaxValue</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="p">(</span><span class="kt">uint</span><span class="p">)</span><span class="n">id</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>While it may be a little complicated to write the converting constructor (and you have to think of things like needing to up-size to <code class="language-plaintext highlighter-rouge">int64</code> in order to accept the maximum value of an unsigned int), this will make it “just work” for users without needing to specify the type suffix.</p>
+
+<h3 id="write-type-converters">Write Type Converters</h3>
+
+<p>What if you’re dealing with a class like that User one up above, that someone else wrote – whether in a 3rd party API or in the .NET framework. The bottom line is that if you are getting integer input from users and you want it to just work, but you can’t modify the class because it came from someone else, you can write a <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.pstypeconverter">PSTypeConverter</a>.</p>
+
+<p>You can even write it in pure PowerShell:</p>
+
+<pre><code class="language-PowerShell">class UserConverter : System.Management.Automation.PSTypeConverter {
+    [bool] CanConvertFrom([PSObject]$psSourceValue, [Type]$destinationType) {
+        # Is it an integer number we're trying to convert to a user?
+        # NOTE: we're claiming we can convert any integer, but really we can't convert anything bigger than uint
+        return $psSourceValue -eq ($psSourceValue -as [int64]) -and $destinationType -eq [User]
+    }
+    [object] ConvertFrom([PSObject]$psSourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
+        return [User]::new([uint]$psSourceValue)
+    }
+
+    # The rest of the methods are implemented by calling one of those first two methods:
+    [bool] CanConvertFrom([object]$sourceValue, [Type]$destinationType) {
+        return $this.CanConvertTo($sourceValue, $destinationType)
+    }
+    [bool] CanConvertTo([object]$sourceValue, [Type]$destinationType) {
+        return $this.CanConvertTo(([PSObject]$sourceValue), $destinationType)
+    }
+    [object] ConvertFrom([object]$sourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
+        return $this.ConvertFrom(([PSObject]$sourceValue), $destinationType, $formatProvider, $ignoreCase)
+    }
+    [object] ConvertTo([object]$sourceValue, [Type]$destinationType, [IFormatProvider]$formatProvider, [bool]$ignoreCase) {
+        return $this.ConvertFrom(([PSObject]$sourceValue), $destinationType, $formatProvider, $ignoreCase)
+    }
+}
+
+Update-TypeData -TypeName 'User' -TypeConverter 'UserConverter' -Force
+</code></pre>
+
+<p>Ironically, if you use the type <code class="language-plaintext highlighter-rouge">[uint]</code> instead of <code class="language-plaintext highlighter-rouge">[int64]</code> in the <code class="language-plaintext highlighter-rouge">CanConvertFrom</code> method, the test will be more truthful (it won’t claim it can convert numbers that are actually too big or too small to be converted), but the result will be unexpected: if you try to convert, say, the number <code class="language-plaintext highlighter-rouge">4294967296</code> the TypeConverter will admit it can’t do the job, and PowerShell will convert it using string constructor, just as it would have <em>without</em> the TypeConverter.</p>
+
+<p>In other words, to get the behavior we want, we write the TypeConverter to lie, and claim it can convert any integer value, which will result in exceptions being thrown when those numbers <em>can’t</em> actually be converted to unsigned integers. Which, of course, is the behavior that we want (and matches the behavior of the integer constructor).</p>
 
         
       </section>
