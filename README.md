@@ -2,6 +2,17 @@
 
 This is my person website and blog, and the theme is based on the [Minimal Mistakes Jekyll theme](https://mmistakes.github.io/minimal-mistakes/)
 
+
+## Serve locally
+
+    docker run --rm -it -v "$PWD`:/srv/jekyll" -v "$PWD/vendor/bundle:/usr/local/bundle" -p 4000:4000 jekyll/jekyll:latest jekyll serve
+
+## Build production
+
+We need to set the JEKYLL_ENV to get comments to show up:
+
+    docker run -e JEKYLL_ENV=production  -v ${{ github.workspace }}/source:/srv/jekyll -v ${{ github.workspace }}/source/_site:/srv/jekyll/_site jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+
 ---
 
 ## Credits

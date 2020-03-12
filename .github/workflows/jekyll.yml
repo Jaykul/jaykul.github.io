@@ -20,6 +20,7 @@ jobs:
       run: |
         docker run \
         -v ${{ github.workspace }}/source:/srv/jekyll -v ${{ github.workspace }}/source/_site:/srv/jekyll/_site \
+         -e JEKYLL_ENV=production \
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
 
     - name: Cloning master branch

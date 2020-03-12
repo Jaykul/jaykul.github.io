@@ -43,30 +43,31 @@ comments:
   utterances:
     theme                : # "github-light" (default), "github-dark"
     issue_term           : # "pathname" (default)
-staticman:
-  allowedFields          : ['name', 'email', 'url', 'message']
-  branch                 : "master"
-  commitMessage          : "New comment by {fields.name}"
-  filename               : comment-{@timestamp}
-  format                 : "yaml" # Accepted values are "json", "yaml" or "frontmatter"
-  moderation             : true
-  path                   : "/_data/comments/{options.slug}"
-  requiredFields         : ['name', 'email', 'message']
-  transforms:
-    email                : "md5"
-  generatedFields:
-    date:
-      type               : "date"
-      options:
-        format           : "iso8601" # "iso8601" (default), "timestamp-seconds", "timestamp-milliseconds"
-  endpoint               : https://staticman3.herokuapp.com/v3/entry/github/ # URL of your own deployment with trailing slash, will fallback to the public instance
-  reCaptcha:
-    enabled: true
-    siteKey  : 6LcOdN8UAAAAAE3LlP1sxEwF91a4YRO6MH9IkVyv # Use your own site key, you need to apply for one on Google
-    # ENCRYPT reCaptcha secret key using Staticman /encrypt endpoint
-    # i.e. https://staticman3.herokuapp.com/v3/encrypt/<your-site-secret>
-    # For more information, visit https://staticman.net/docs/encryption
-    secret   : dzKvODmze94SmPIJl/9r66cf+6jl/CUuW3qrUFAzCn8P4ID9ARa4FpHNcehmIjAcVD+TbXS1+4NaaJSnoJvuJ5FrrkiUEUbKNYDFu/c1ipHUMrs6DBKkbpzVFiTlmAGGt/yO4yyzF95bv0BG2SzyTH6qI0Asn7SkzaDOP3rKnRaoI7Cm2nSaBchxZPlmGsLqVQbsm85cuNyEjxxQvqCjNyYOuRLMsSgXt66x2HI/35TRFKJiZdQ3U8096Xq1om5HZbowk5aDvrGeN6ULxSJi+d9GIkJIFXfSHuPEgaCExmCLC6UpXYI1HPlE7p9SD/9pLjzd/9lrA9gwEDcOcMWwDg==
+  staticman:
+    allowedFields          : ['name', 'email', 'url', 'message']
+    branch                 : "jekyll-source"
+    commitMessage          : "New comment by {fields.name}"
+    filename               : comment-{@timestamp}
+    format                 : "yaml" # Accepted values are "json", "yaml" or "frontmatter"
+    moderation             : true
+    path                   : "/_data/comments/{options.slug}"
+    requiredFields         : ['name', 'email', 'message']
+    transforms:
+      email                : "md5"
+    generatedFields:
+      date:
+        type               : "date"
+        options:
+          format           : "iso8601" # "iso8601" (default), "timestamp-seconds", "timestamp-milliseconds"
+    endpoint               : https://staticman3.herokuapp.com/v3/entry/github/ # URL of your own deployment with trailing slash, will fallback to the public instance
+reCaptcha:
+  enabled: true
+  siteKey  : 6LcBqOAUAAAAADYldyKRDtnu9ZQO4rArHXv-4Tc4 # Use your own site key, you need to apply for one on Google
+  # ENCRYPT reCaptcha secret key using Staticman /encrypt endpoint
+  # i.e. https://staticman3.herokuapp.com/v3/encrypt/<your-site-secret>
+  # For more information, visit https://staticman.net/docs/encryption
+  secret   : IskWAszCP3hHJdMbkabDJWO9h4QDOmvg25qxFz+Mae3qGg5bIYEAG3o4yEQlE+UMvcYAXWD9YTEgObbaayTp7ghsuUnURFzenzNYIiWnK5ZzegIhl65kf9goh2HHHqWhiBGAJRQh/+ZL1LobG3vZkQM/LLmcdjcNlETtRMgoF54NcuDQgdBWpUtyrSmFa/f/ht/eIp5ykgomplU780/vEYvmsTN13S9uvtQJX71H/5Ogitqr6poubKhehGLoM67rsEsjgZBe0qYKg7DpodooIRE6tNceQTzRlXrKyyzoI5xYzPuy1QkhDcpcurIZB7aGIkQvV1Tyj7e0Jm+IAljU4w==
+
 atom_feed:
   path                   : # blank (default) uses feed.xml
 search                   : # true, false (default)
@@ -107,7 +108,6 @@ analytics:
   google:
     tracking_id          : UA-52513307-1
     anonymize_ip         : # true, false (default)
-
 
 # Site Author
 author:
@@ -150,7 +150,6 @@ footer:
       icon: "fab fa-fw fa-stack-overflow"
       url: "https://stackoverflow.com/users/8718/jaykul"
 
-
 # Reading Files
 include:
   - .htaccess
@@ -179,7 +178,6 @@ exclude:
   - tmp
 keep_files:
   - .git
-  - .svn
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
