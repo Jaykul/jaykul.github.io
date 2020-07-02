@@ -34,4 +34,10 @@ var store = [{
         "tags": ["powershell","classes","casting"],
         "url": "https://huddledmasses.org/2020/03/powershell-casting-oddities/",
         "teaser": null
+      },{
+        "title": "Empowering your code with Attributes",
+        "excerpt":"Empowering Your Code with Attributes PowerShell has a lot of functionality built-in that is based on relatively sophisticated programming concepts. One example of this is PowerShell’s attributes. The first time you write a PowerShell script, you may not use any attributes. But the first time you ask a veteran to...","categories": ["powershell"],
+        "tags": ["powershell","classes","validator","casting"],
+        "url": "https://huddledmasses.org/2020/03/empowering-your-pwsh-with-attributes/",
+        "teaser": null
       }]

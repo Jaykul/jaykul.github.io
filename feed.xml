@@ -1,4 +1,182 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://huddledmasses.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://huddledmasses.org/" rel="alternate" type="text/html" /><updated>2020-03-12T11:11:25-04:00</updated><id>https://huddledmasses.org/feed.xml</id><title type="html">Huddled Masses</title><subtitle>Personal projects and blog posts by Joel &quot;Jaykul&quot; Bennett</subtitle><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><entry><title type="html">PowerShell Casting Oddities</title><link href="https://huddledmasses.org/2020/03/powershell-casting-oddities/" rel="alternate" type="text/html" title="PowerShell Casting Oddities" /><published>2020-03-03T00:00:00-05:00</published><updated>2020-03-03T00:00:00-05:00</updated><id>https://huddledmasses.org/2020/03/powershell-casting-oddities</id><content type="html" xml:base="https://huddledmasses.org/2020/03/powershell-casting-oddities/">&lt;h2 id=&quot;powershells-casting-can-result-in-some-weird-results&quot;&gt;PowerShell’s casting can result in some weird results.&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="https://huddledmasses.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://huddledmasses.org/" rel="alternate" type="text/html" /><updated>2020-07-01T23:44:14-04:00</updated><id>https://huddledmasses.org/feed.xml</id><title type="html">Huddled Masses</title><subtitle>Personal projects and blog posts by Joel &quot;Jaykul&quot; Bennett</subtitle><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><entry><title type="html">Empowering your code with Attributes</title><link href="https://huddledmasses.org/2020/03/empowering-your-pwsh-with-attributes/" rel="alternate" type="text/html" title="Empowering your code with Attributes" /><published>2020-03-03T00:00:00-05:00</published><updated>2020-03-03T00:00:00-05:00</updated><id>https://huddledmasses.org/2020/03/empowering-your-pwsh-with-attributes</id><content type="html" xml:base="https://huddledmasses.org/2020/03/empowering-your-pwsh-with-attributes/">&lt;h2 id=&quot;empowering-your-code-with-attributes&quot;&gt;Empowering Your Code with Attributes&lt;/h2&gt;
+
+&lt;p&gt;PowerShell has a lot of functionality built-in that is based on relatively sophisticated programming concepts. One example of this is PowerShell’s attributes.&lt;/p&gt;
+
+&lt;p&gt;The first time you write a PowerShell script, you may not use any attributes. But the first time you ask a veteran to help you turn one into a function, you probably had to use a bunch of them without even understanding what they do!&lt;/p&gt;
+
+&lt;p&gt;Almost all writers of PowerShell scripts and functions (and compiled cmdlets) should know about the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[CmdletBinding()]&lt;/code&gt; attribute which is applied to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;param()&lt;/code&gt; block to implicitly add the “common” parameters like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-Verbose&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-Debug&lt;/code&gt; and triggers support for the special &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-?&lt;/code&gt; automatic help parameter, because built-in help is one of the core PowerShell concepts.&lt;/p&gt;
+
+&lt;p&gt;Most people who’ve written more than one or two scripts have probably also seen the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[Parameter()]&lt;/code&gt; attribute which can be used to make things &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Mandatory&lt;/code&gt; or to split them up by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ParameterSetName&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;And of course, if you’ve written functions or scripts meant for other people to use, you’ve &lt;a href=&quot;https://redmondmag.com/articles/2018/09/25/validate-input-in-powershell-functions-1.aspx&quot;&gt;probably&lt;/a&gt; &lt;a href=&quot;https://riptutorial.com/powershell/example/29958/parameter-validation&quot;&gt;become&lt;/a&gt; &lt;a href=&quot;https://jdhitsolutions.com/blog/powershell/2206/powershell-scripting-with-validateset/&quot;&gt;accustomed&lt;/a&gt; &lt;a href=&quot;https://jdhitsolutions.com/blog/powershell/2188/powershell-scripting-with-validaterange/&quot;&gt;to&lt;/a&gt; &lt;a href=&quot;https://devblogs.microsoft.com/scripting/simplify-your-powershell-script-with-parameter-validation/&quot;&gt;using&lt;/a&gt; &lt;a href=&quot;https://learn-powershell.net/2014/02/04/using-powershell-parameter-validation-to-make-your-day-easier/&quot;&gt;the&lt;/a&gt; &lt;a href=&quot;https://mikefrobbins.com/2015/03/31/powershell-advanced-functions-can-we-build-them-better-with-parameter-validation-yes-we-can/&quot;&gt;built-in&lt;/a&gt; &lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.validateargumentsattribute?view=powershellsdk-7.0.0&quot;&gt;validation attributes&lt;/a&gt; like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ValidateSet&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ValidateRange&lt;/code&gt; – which keep getting better in each version of PowerShell.&lt;/p&gt;
+
+&lt;p&gt;You may have done all of this and more, without ever knowing more about attributes than the fact that there’s a bit of square-bracket syntax which just magically … works! After all, PowerShell uses &lt;em&gt;custom attributes&lt;/em&gt; to enhance parameter validation, type casting, intellisense, command discovery, and more.&lt;/p&gt;
+
+&lt;h3 id=&quot;what-is-an-attribute&quot;&gt;What is an Attribute?&lt;/h3&gt;
+
+&lt;p&gt;Attributes are &lt;em&gt;metadata&lt;/em&gt;. That is, they are part of the data (within .NET compiled programs) that &lt;em&gt;describes&lt;/em&gt; the code. In PowerShell (or rather, in .NET) you can examine and &lt;em&gt;modifify&lt;/em&gt; the metadata on classes, methods, and assemblies even while the code is running.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Disclaimer: Normally, Attributes are an advanced topic in programming. When you’re learning PowerShell, you may learn to use them inadvertenlty, without understanding what they are, but in most .NET languages beginners aren’t taught about them until they are already familiar with .NET’s syntax, common types, and even with object oriented concepts including writing classes and methods, and using inheritance – because that makes them easier to understand.&lt;/p&gt;
+
+  &lt;p&gt;If you pick up a book on C#, for instance, you might find “Attributes” way back in chapter 17 or 18, after chapters on Delegates, Exception handling, Threads, and even debugging. It will be with other metadata concepts like assemblies, reflection and security, &lt;em&gt;probably&lt;/em&gt; right before the book stops talking about &lt;em&gt;concepts&lt;/em&gt; entirely and starts talking about &lt;em&gt;specific applications&lt;/em&gt; of C# like working with databases, or writing web pages.&lt;/p&gt;
+
+  &lt;p&gt;Attributes are critical in real world programming simply because the frameworks we use for working with databases, writing web sites and services, or even writing PowerShell commands use metadata extensively, but you don’t need much more understanding of them than “they are metadata about code” to be able to use them,&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;using-attributes-in-code&quot;&gt;Using Attributes in Code&lt;/h3&gt;
+
+&lt;p&gt;In .NET, an &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Attribute&lt;/code&gt; is a class that inherits from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;System.Attribute&lt;/code&gt; directly or indirectly.&lt;/p&gt;
+
+&lt;p&gt;Attributes are applied to classes, methods, fields and variables by specifying the attribute name in square brackets right before the thing you want the attribute to apply to. Note that although the name of custom attribute classes should always end with “Attribute”, you can optionally leave that off when &lt;em&gt;using&lt;/em&gt; the attribute. However, in PowerShell, the parentheses that go after the attribute name are never &lt;em&gt;optional&lt;/em&gt; (although they are in C#, if the attribute doesn’t require parameters to its constructor). Thus, in this PowerShell example, we see &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ValidateNotNullAttribute&lt;/code&gt; applied to a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;string&lt;/code&gt; variable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;[ValidateNotNull()]
+[string]$Name = &quot;&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In PowerShell, even more things than usual support attributes: not only classes and functions but also scripts, including anonymous scriptblocks, as well as parameters, fields, and even variables. Two special cases are worth calling out:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Scriptblocks, functions and scripts are annotated by putting the attribute notation &lt;em&gt;just before&lt;/em&gt; the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;param&lt;/code&gt; statement – making the param statement necessary.&lt;/li&gt;
+  &lt;li&gt;Class Properties. PowerShell class properties do not (yet) support &lt;em&gt;getters&lt;/em&gt; and &lt;em&gt;setters&lt;/em&gt; on fields, but do support validation and transform attributes. As such, writing &lt;em&gt;custom&lt;/em&gt; attributes becomes a possible work-around for some scenarios.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;setting-attribute-properties&quot;&gt;Setting Attribute Properties&lt;/h4&gt;
+
+&lt;p&gt;Some attributes have constructor arguments, and some have additional properties you can set. Usually you can find this information in the documentation, but since this is PowerShell, you can also discover them! Try writing the attribute out using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;::new&lt;/code&gt; type construction syntax in the console to get the OverLoadDefinitions, and construct one and run it through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-Member&lt;/code&gt; to see what properties it has. For instance, one of the old PowerShell validation attributes has some new optional functionality in PowerShell 6 and 7:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt; [ValidateScript]::new
+
+OverloadDefinitions
+-------------------
+ValidateScript new(scriptblock scriptBlock)
+
+
+&amp;gt; [ValidateScript]::new({}) | Get-Member -Type Property
+
+TypeName: System.Management.Automation.ValidateScriptAttribute
+
+Name         MemberType Definition
+----         ---------- ----------
+ErrorMessage Property   string ErrorMessage {get;set;}
+ScriptBlock  Property   scriptblock ScriptBlock {get;}
+TypeId       Property   System.Object TypeId {get;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ScriptBlock&lt;/code&gt; property is required in the constructor, but there’s a new &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;set&lt;/code&gt;able property: the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorMessage&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In PowerShell, any settable property of an attribute can be set within the annotation parentheses as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Name = $Value&lt;/code&gt;, and if it’s a boolean property, you can just write the name and leave off the assignment to set it true. Lets take a look at an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;filter Get-Base64Content {
+    [CmdletBinding()]
+    param(
+        [ValidateScript({ Test-Path $_ -Type Leaf }, ErrorMessage = &quot;The Path must point to an existing file&quot;)]
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [Alias(&quot;PSPath&quot;)]
+        [string]$Path
+    )
+    [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((Get-Content -Raw $Path)))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since that was a pretty complete example, there are a few other things in this code sample you &lt;em&gt;may&lt;/em&gt; not be familiar with:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;filter&lt;/code&gt; keyword&lt;/strong&gt; is just like the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;function&lt;/code&gt; keyword, except that the &lt;em&gt;default&lt;/em&gt; code block is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;process&lt;/code&gt; instead of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;end&lt;/code&gt;. Since pipeline input is only available in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;process&lt;/code&gt; block, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;filter&lt;/code&gt; keyword makes it easier to write functions that work with pipeline input.&lt;/li&gt;
+  &lt;li&gt;You should almost &lt;em&gt;always&lt;/em&gt; specify &lt;strong&gt;the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[CmdletBinding()]&lt;/code&gt; attribute&lt;/strong&gt; on scripts and functions. It forces strict parameter binding, so you have to specify all your parameter names in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;param()&lt;/code&gt;, and it also adds the default parameters for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-Verbose&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-ErrorAction&lt;/code&gt;, etc., including the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-?&lt;/code&gt; parameter for getting help – this is important, because people will expect &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-?&lt;/code&gt; to work and if you don’t specify &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[CmdletBinding()]&lt;/code&gt;, you need to implement that yourself.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ValidateScript&lt;/code&gt; attribute&lt;/strong&gt;. In PowerShell 5.1 you didn’t have the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ErrorMessage&lt;/code&gt; parameter, but as of PowerShell 6, we have this new (optional) property so we can easily customize the message.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Parameter&lt;/code&gt; attribute&lt;/strong&gt; supports making the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Path&lt;/code&gt; parameter mandatory, and also declaring that it will accept values from the pipeline. Because we’ve also specified &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ValueFromPipelineByPropertyName&lt;/code&gt;, PowerShell will first try to match properties of pipeline objects, and only if that fails, cast the actual pipeline object.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Alias&lt;/code&gt; attribute&lt;/strong&gt; is generally used for three reasons in PowerShell. The last holds true here:
+    &lt;ol&gt;
+      &lt;li&gt;You can provide aliases for a function to create short names like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gci&lt;/code&gt; for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Get-ChildItem&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;You can provide aliases for a parameter to create shorter, simpler, or easier to type names&lt;/li&gt;
+      &lt;li&gt;You can provide aliases for parameters which accept &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ValueFromPipelineByPropertyName&lt;/code&gt; to facilitate matching the properties of objects which are likely to be piped to your function. In this case, objects output by Get-ChildItem, like files, have a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PSPath&lt;/code&gt; parameter which is the fully qualified path to the item.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;writing-your-own-attributes&quot;&gt;Writing Your Own Attributes&lt;/h2&gt;
+
+&lt;p&gt;Since attributes are just classes that derive from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;System.Attribute&lt;/code&gt;, you can writing your own in PowerShell very simply. Just inherit like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;class HumbleAttribute : Attribute {
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Of course, this &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HumbleAttribute&lt;/code&gt; doesn’t &lt;em&gt;do&lt;/em&gt; anything… except that it’s metadata. That means we can find &lt;em&gt;things&lt;/em&gt; which have that attribute on them, so if we have a command with the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[Humble()]&lt;/code&gt; attribute on it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;function Test-Humility {
+    [Humble()][CmdletBinding()]
+    param()
+    Write-Host &quot;I'm humble&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We could find all commands with that attribute like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;Get-Command | Where { $_.ScriptBlock.Attributes.TypeId.Name -eq &quot;HumbleAttribute&quot; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Of course, any properties or methods you add to the attribute can be used at will, and you can inherit from other attributes, so we could, for instance, extend the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CmdletBinding&lt;/code&gt; attribute with a list of dependencies like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;class BuildCmdletAttribute : System.Management.Automation.CmdletBindingAttribute {
+    [string[]]$Requires
+
+    BuildCmdletAttribute() {}
+
+    BuildCmdletAttribute([string[]]$Requires) {
+        $this.Requires = $Requires
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we could add that attribute to some build steps, like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;
+function publish {
+    [BuildCmdlet((&quot;init&quot;, &quot;build&quot;))]param()
+    Write-Information &quot;BUILDING: $ModuleName from $Path&quot;
+}
+
+function update {
+    [BuildCmdlet(&quot;init&quot;)]param()
+    Write-Information &quot;UPDATING dependencies&quot;
+    Install-RequiredModules
+}
+
+function build {
+    [BuildCmdlet((&quot;update&quot;,&quot;init&quot;))]param()
+    Write-Information &quot;BUILDING: YourModuleName from $PScriptRoot&quot;
+    Build-Module
+}
+
+function init {
+    [BuildCmdlet()]param()
+    Write-Information &quot;INITIALIZING build variables&quot;
+    $Version = gitversion -showvariable SemVer
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And you could write commands that take advantage of that metadata, by pulling it out from the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Attributes&lt;/code&gt;, so that we could, for example, sort a list of these &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BuildCmdlet&lt;/code&gt; objects into dependency order, and then … run them:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-PowerShell&quot;&gt;Get-Command |
+    Where-Object { $_.ScriptBlock.Attributes.TypeId.Name -eq &quot;BuildCmdletAttribute&quot; } |
+    Add-Member ScriptProperty Requires {
+        $this.ScriptBlock.Attributes.Where{ $_.TypeId.Name -eq &quot;BuildCmdletAttribute&quot;}.Requires
+    } -Passthru -Force |
+    Add-Member ScriptProperty Weight {
+        $Weight = 1
+        foreach ($command in $this.Requires) {
+            $Weight += [Math]::Max((Get-Command $command).Weight, 1)
+        }
+        $Weight
+    } -Passthru  -Force |
+    Sort-Object Weight -Ov Commands |
+    ForEach { &amp;amp; $_ -InformationAction Continue }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There’s so much more that you can do with Attributes in PowerShell due to the fact that PowerShell has inherent functionality built around them. You can write attributes that produce intellisense for &lt;a href=&quot;https://powershell.one/powershell-internals/attributes/auto-completion&quot;&gt;tab-completion&lt;/a&gt;, and attributes that &lt;a href=&quot;https://powershell.one/powershell-internals/attributes/transformation&quot;&gt;coerce values to a certain type&lt;/a&gt; (even interacting with the user), and more. Check out Dr. Tobias Weltner’s series of articles, starting with his &lt;a href=&quot;https://powershell.one/powershell-internals/attributes/primer&quot;&gt;primer&lt;/a&gt; where you’re sure to learn about at least one built-in attribute you never knew existed…&lt;/p&gt;</content><author><name>Joel &quot;Jaykul&quot; Bennett</name></author><category term="powershell" /><category term="powershell" /><category term="classes" /><category term="validator" /><category term="casting" /><summary type="html">Empowering Your Code with Attributes</summary></entry><entry><title type="html">PowerShell Casting Oddities</title><link href="https://huddledmasses.org/2020/03/powershell-casting-oddities/" rel="alternate" type="text/html" title="PowerShell Casting Oddities" /><published>2020-03-03T00:00:00-05:00</published><updated>2020-03-03T00:00:00-05:00</updated><id>https://huddledmasses.org/2020/03/powershell-casting-oddities</id><content type="html" xml:base="https://huddledmasses.org/2020/03/powershell-casting-oddities/">&lt;h2 id=&quot;powershells-casting-can-result-in-some-weird-results&quot;&gt;PowerShell’s casting can result in some weird results.&lt;/h2&gt;
 
 &lt;p&gt;Before we begin, check out this C# class:&lt;/p&gt;
 

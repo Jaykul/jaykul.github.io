@@ -1,0 +1,965 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Empowering your code with Attributes - Huddled Masses</title>
+<meta name="description" content="Empowering Your Code with Attributes  ">
+
+
+  <meta name="author" content="Joel "Jaykul" Bennett">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Huddled Masses">
+<meta property="og:title" content="Empowering your code with Attributes">
+<meta property="og:url" content="https://huddledmasses.org/2020/03/empowering-your-pwsh-with-attributes/">
+
+
+  <meta property="og:description" content="Empowering Your Code with Attributes  ">
+
+
+
+
+
+  <meta name="twitter:site" content="@jaykul">
+  <meta name="twitter:title" content="Empowering your code with Attributes">
+  <meta name="twitter:description" content="Empowering Your Code with Attributes  ">
+  <meta name="twitter:url" content="https://huddledmasses.org/2020/03/empowering-your-pwsh-with-attributes/">
+
+  
+    <meta name="twitter:card" content="summary">
+    
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2020-03-03T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://huddledmasses.org/2020/03/empowering-your-pwsh-with-attributes/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Joel \"Jaykul\" Bennett",
+      "url": "https://huddledmasses.org/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Huddled Masses Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+<!-- favicons: thanks https://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Huddled Masses
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/2014/07/about-huddled-masses">About Me</a>
+            </li><li class="masthead__menu-item">
+              <a href="/Resume-ShortForm.pdf">Resume</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/Jaykul/PowerLine/">PowerLine</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/PoshCode/PANSIES/">PANSIES</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/ShowUI/ShowUI">ShowUI</a>
+            </li><li class="masthead__menu-item">
+              <a href="https://github.com/Jaykul/PoshConsole/">PoshConsole</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="https://HuddledMasses.org/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/2020" itemprop="item"><span itemprop="name">2020</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+        
+      
+    
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/2020/03" itemprop="item"><span itemprop="name">03</span></a>
+          <meta itemprop="position" content="3" />
+        </li>
+        <span class="sep">/</span>
+        
+      
+    
+      
+      
+        <li class="current">Empowering your code with Attributes</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/images/avatar.png" alt="Joel "Jaykul" Bennett" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Joel "Jaykul" Bennett</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>An opinionated DevOps engineer, programmer, speaker, and Microsoft MVP.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Rochester, NY</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:Jaykul@HuddledMasses.org" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+            <li><a href="https://twitter.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+          
+        
+          
+            <li><a href="https://stackoverflow.com/users/8718/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> StackOverflow</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Empowering your code with Attributes">
+    <meta itemprop="description" content="Empowering Your Code with Attributes">
+    <meta itemprop="datePublished" content="2020-03-03T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Empowering your code with Attributes
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  7 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="empowering-your-code-with-attributes">Empowering Your Code with Attributes</h2>
+
+<p>PowerShell has a lot of functionality built-in that is based on relatively sophisticated programming concepts. One example of this is PowerShell’s attributes.</p>
+
+<p>The first time you write a PowerShell script, you may not use any attributes. But the first time you ask a veteran to help you turn one into a function, you probably had to use a bunch of them without even understanding what they do!</p>
+
+<p>Almost all writers of PowerShell scripts and functions (and compiled cmdlets) should know about the <code class="language-plaintext highlighter-rouge">[CmdletBinding()]</code> attribute which is applied to the <code class="language-plaintext highlighter-rouge">param()</code> block to implicitly add the “common” parameters like <code class="language-plaintext highlighter-rouge">-Verbose</code> and <code class="language-plaintext highlighter-rouge">-Debug</code> and triggers support for the special <code class="language-plaintext highlighter-rouge">-?</code> automatic help parameter, because built-in help is one of the core PowerShell concepts.</p>
+
+<p>Most people who’ve written more than one or two scripts have probably also seen the <code class="language-plaintext highlighter-rouge">[Parameter()]</code> attribute which can be used to make things <code class="language-plaintext highlighter-rouge">Mandatory</code> or to split them up by <code class="language-plaintext highlighter-rouge">ParameterSetName</code>.</p>
+
+<p>And of course, if you’ve written functions or scripts meant for other people to use, you’ve <a href="https://redmondmag.com/articles/2018/09/25/validate-input-in-powershell-functions-1.aspx">probably</a> <a href="https://riptutorial.com/powershell/example/29958/parameter-validation">become</a> <a href="https://jdhitsolutions.com/blog/powershell/2206/powershell-scripting-with-validateset/">accustomed</a> <a href="https://jdhitsolutions.com/blog/powershell/2188/powershell-scripting-with-validaterange/">to</a> <a href="https://devblogs.microsoft.com/scripting/simplify-your-powershell-script-with-parameter-validation/">using</a> <a href="https://learn-powershell.net/2014/02/04/using-powershell-parameter-validation-to-make-your-day-easier/">the</a> <a href="https://mikefrobbins.com/2015/03/31/powershell-advanced-functions-can-we-build-them-better-with-parameter-validation-yes-we-can/">built-in</a> <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.validateargumentsattribute?view=powershellsdk-7.0.0">validation attributes</a> like <code class="language-plaintext highlighter-rouge">ValidateSet</code> and <code class="language-plaintext highlighter-rouge">ValidateRange</code> – which keep getting better in each version of PowerShell.</p>
+
+<p>You may have done all of this and more, without ever knowing more about attributes than the fact that there’s a bit of square-bracket syntax which just magically … works! After all, PowerShell uses <em>custom attributes</em> to enhance parameter validation, type casting, intellisense, command discovery, and more.</p>
+
+<h3 id="what-is-an-attribute">What is an Attribute?</h3>
+
+<p>Attributes are <em>metadata</em>. That is, they are part of the data (within .NET compiled programs) that <em>describes</em> the code. In PowerShell (or rather, in .NET) you can examine and <em>modifify</em> the metadata on classes, methods, and assemblies even while the code is running.</p>
+
+<blockquote>
+  <p>Disclaimer: Normally, Attributes are an advanced topic in programming. When you’re learning PowerShell, you may learn to use them inadvertenlty, without understanding what they are, but in most .NET languages beginners aren’t taught about them until they are already familiar with .NET’s syntax, common types, and even with object oriented concepts including writing classes and methods, and using inheritance – because that makes them easier to understand.</p>
+
+  <p>If you pick up a book on C#, for instance, you might find “Attributes” way back in chapter 17 or 18, after chapters on Delegates, Exception handling, Threads, and even debugging. It will be with other metadata concepts like assemblies, reflection and security, <em>probably</em> right before the book stops talking about <em>concepts</em> entirely and starts talking about <em>specific applications</em> of C# like working with databases, or writing web pages.</p>
+
+  <p>Attributes are critical in real world programming simply because the frameworks we use for working with databases, writing web sites and services, or even writing PowerShell commands use metadata extensively, but you don’t need much more understanding of them than “they are metadata about code” to be able to use them,</p>
+</blockquote>
+
+<h3 id="using-attributes-in-code">Using Attributes in Code</h3>
+
+<p>In .NET, an <code class="language-plaintext highlighter-rouge">Attribute</code> is a class that inherits from <code class="language-plaintext highlighter-rouge">System.Attribute</code> directly or indirectly.</p>
+
+<p>Attributes are applied to classes, methods, fields and variables by specifying the attribute name in square brackets right before the thing you want the attribute to apply to. Note that although the name of custom attribute classes should always end with “Attribute”, you can optionally leave that off when <em>using</em> the attribute. However, in PowerShell, the parentheses that go after the attribute name are never <em>optional</em> (although they are in C#, if the attribute doesn’t require parameters to its constructor). Thus, in this PowerShell example, we see <code class="language-plaintext highlighter-rouge">ValidateNotNullAttribute</code> applied to a <code class="language-plaintext highlighter-rouge">string</code> variable:</p>
+
+<pre><code class="language-PowerShell">[ValidateNotNull()]
+[string]$Name = ""
+</code></pre>
+
+<p>In PowerShell, even more things than usual support attributes: not only classes and functions but also scripts, including anonymous scriptblocks, as well as parameters, fields, and even variables. Two special cases are worth calling out:</p>
+
+<ol>
+  <li>Scriptblocks, functions and scripts are annotated by putting the attribute notation <em>just before</em> the <code class="language-plaintext highlighter-rouge">param</code> statement – making the param statement necessary.</li>
+  <li>Class Properties. PowerShell class properties do not (yet) support <em>getters</em> and <em>setters</em> on fields, but do support validation and transform attributes. As such, writing <em>custom</em> attributes becomes a possible work-around for some scenarios.</li>
+</ol>
+
+<h4 id="setting-attribute-properties">Setting Attribute Properties</h4>
+
+<p>Some attributes have constructor arguments, and some have additional properties you can set. Usually you can find this information in the documentation, but since this is PowerShell, you can also discover them! Try writing the attribute out using the <code class="language-plaintext highlighter-rouge">::new</code> type construction syntax in the console to get the OverLoadDefinitions, and construct one and run it through <code class="language-plaintext highlighter-rouge">Get-Member</code> to see what properties it has. For instance, one of the old PowerShell validation attributes has some new optional functionality in PowerShell 6 and 7:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; [ValidateScript]::new
+
+OverloadDefinitions
+-------------------
+ValidateScript new(scriptblock scriptBlock)
+
+
+&gt; [ValidateScript]::new({}) | Get-Member -Type Property
+
+TypeName: System.Management.Automation.ValidateScriptAttribute
+
+Name         MemberType Definition
+----         ---------- ----------
+ErrorMessage Property   string ErrorMessage {get;set;}
+ScriptBlock  Property   scriptblock ScriptBlock {get;}
+TypeId       Property   System.Object TypeId {get;}
+</code></pre></div></div>
+
+<p>As you can see, the <code class="language-plaintext highlighter-rouge">ScriptBlock</code> property is required in the constructor, but there’s a new <code class="language-plaintext highlighter-rouge">set</code>able property: the <code class="language-plaintext highlighter-rouge">ErrorMessage</code>.</p>
+
+<p>In PowerShell, any settable property of an attribute can be set within the annotation parentheses as <code class="language-plaintext highlighter-rouge">Name = $Value</code>, and if it’s a boolean property, you can just write the name and leave off the assignment to set it true. Lets take a look at an example:</p>
+
+<pre><code class="language-PowerShell">filter Get-Base64Content {
+    [CmdletBinding()]
+    param(
+        [ValidateScript({ Test-Path $_ -Type Leaf }, ErrorMessage = "The Path must point to an existing file")]
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [Alias("PSPath")]
+        [string]$Path
+    )
+    [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((Get-Content -Raw $Path)))
+}
+</code></pre>
+
+<p>Since that was a pretty complete example, there are a few other things in this code sample you <em>may</em> not be familiar with:</p>
+
+<ol>
+  <li><strong>The <code class="language-plaintext highlighter-rouge">filter</code> keyword</strong> is just like the <code class="language-plaintext highlighter-rouge">function</code> keyword, except that the <em>default</em> code block is <code class="language-plaintext highlighter-rouge">process</code> instead of <code class="language-plaintext highlighter-rouge">end</code>. Since pipeline input is only available in the <code class="language-plaintext highlighter-rouge">process</code> block, the <code class="language-plaintext highlighter-rouge">filter</code> keyword makes it easier to write functions that work with pipeline input.</li>
+  <li>You should almost <em>always</em> specify <strong>the <code class="language-plaintext highlighter-rouge">[CmdletBinding()]</code> attribute</strong> on scripts and functions. It forces strict parameter binding, so you have to specify all your parameter names in the <code class="language-plaintext highlighter-rouge">param()</code>, and it also adds the default parameters for <code class="language-plaintext highlighter-rouge">-Verbose</code>, <code class="language-plaintext highlighter-rouge">-ErrorAction</code>, etc., including the <code class="language-plaintext highlighter-rouge">-?</code> parameter for getting help – this is important, because people will expect <code class="language-plaintext highlighter-rouge">-?</code> to work and if you don’t specify <code class="language-plaintext highlighter-rouge">[CmdletBinding()]</code>, you need to implement that yourself.</li>
+  <li><strong>The <code class="language-plaintext highlighter-rouge">ValidateScript</code> attribute</strong>. In PowerShell 5.1 you didn’t have the <code class="language-plaintext highlighter-rouge">ErrorMessage</code> parameter, but as of PowerShell 6, we have this new (optional) property so we can easily customize the message.</li>
+  <li><strong>The <code class="language-plaintext highlighter-rouge">Parameter</code> attribute</strong> supports making the <code class="language-plaintext highlighter-rouge">Path</code> parameter mandatory, and also declaring that it will accept values from the pipeline. Because we’ve also specified <code class="language-plaintext highlighter-rouge">ValueFromPipelineByPropertyName</code>, PowerShell will first try to match properties of pipeline objects, and only if that fails, cast the actual pipeline object.</li>
+  <li><strong>The <code class="language-plaintext highlighter-rouge">Alias</code> attribute</strong> is generally used for three reasons in PowerShell. The last holds true here:
+    <ol>
+      <li>You can provide aliases for a function to create short names like <code class="language-plaintext highlighter-rouge">gci</code> for <code class="language-plaintext highlighter-rouge">Get-ChildItem</code></li>
+      <li>You can provide aliases for a parameter to create shorter, simpler, or easier to type names</li>
+      <li>You can provide aliases for parameters which accept <code class="language-plaintext highlighter-rouge">ValueFromPipelineByPropertyName</code> to facilitate matching the properties of objects which are likely to be piped to your function. In this case, objects output by Get-ChildItem, like files, have a <code class="language-plaintext highlighter-rouge">PSPath</code> parameter which is the fully qualified path to the item.</li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="writing-your-own-attributes">Writing Your Own Attributes</h2>
+
+<p>Since attributes are just classes that derive from <code class="language-plaintext highlighter-rouge">System.Attribute</code>, you can writing your own in PowerShell very simply. Just inherit like this:</p>
+
+<pre><code class="language-PowerShell">class HumbleAttribute : Attribute {
+
+}
+</code></pre>
+
+<p>Of course, this <code class="language-plaintext highlighter-rouge">HumbleAttribute</code> doesn’t <em>do</em> anything… except that it’s metadata. That means we can find <em>things</em> which have that attribute on them, so if we have a command with the <code class="language-plaintext highlighter-rouge">[Humble()]</code> attribute on it:</p>
+
+<pre><code class="language-PowerShell">function Test-Humility {
+    [Humble()][CmdletBinding()]
+    param()
+    Write-Host "I'm humble"
+}
+</code></pre>
+
+<p>We could find all commands with that attribute like this:</p>
+
+<pre><code class="language-PowerShell">Get-Command | Where { $_.ScriptBlock.Attributes.TypeId.Name -eq "HumbleAttribute" }
+</code></pre>
+
+<p>Of course, any properties or methods you add to the attribute can be used at will, and you can inherit from other attributes, so we could, for instance, extend the <code class="language-plaintext highlighter-rouge">CmdletBinding</code> attribute with a list of dependencies like this:</p>
+
+<pre><code class="language-PowerShell">class BuildCmdletAttribute : System.Management.Automation.CmdletBindingAttribute {
+    [string[]]$Requires
+
+    BuildCmdletAttribute() {}
+
+    BuildCmdletAttribute([string[]]$Requires) {
+        $this.Requires = $Requires
+    }
+}
+</code></pre>
+
+<p>Now we could add that attribute to some build steps, like this:</p>
+
+<pre><code class="language-PowerShell">
+function publish {
+    [BuildCmdlet(("init", "build"))]param()
+    Write-Information "BUILDING: $ModuleName from $Path"
+}
+
+function update {
+    [BuildCmdlet("init")]param()
+    Write-Information "UPDATING dependencies"
+    Install-RequiredModules
+}
+
+function build {
+    [BuildCmdlet(("update","init"))]param()
+    Write-Information "BUILDING: YourModuleName from $PScriptRoot"
+    Build-Module
+}
+
+function init {
+    [BuildCmdlet()]param()
+    Write-Information "INITIALIZING build variables"
+    $Version = gitversion -showvariable SemVer
+}
+</code></pre>
+
+<p>And you could write commands that take advantage of that metadata, by pulling it out from the <code class="language-plaintext highlighter-rouge">Attributes</code>, so that we could, for example, sort a list of these <code class="language-plaintext highlighter-rouge">BuildCmdlet</code> objects into dependency order, and then … run them:</p>
+
+<pre><code class="language-PowerShell">Get-Command |
+    Where-Object { $_.ScriptBlock.Attributes.TypeId.Name -eq "BuildCmdletAttribute" } |
+    Add-Member ScriptProperty Requires {
+        $this.ScriptBlock.Attributes.Where{ $_.TypeId.Name -eq "BuildCmdletAttribute"}.Requires
+    } -Passthru -Force |
+    Add-Member ScriptProperty Weight {
+        $Weight = 1
+        foreach ($command in $this.Requires) {
+            $Weight += [Math]::Max((Get-Command $command).Weight, 1)
+        }
+        $Weight
+    } -Passthru  -Force |
+    Sort-Object Weight -Ov Commands |
+    ForEach { &amp; $_ -InformationAction Continue }
+</code></pre>
+
+<p>There’s so much more that you can do with Attributes in PowerShell due to the fact that PowerShell has inherent functionality built around them. You can write attributes that produce intellisense for <a href="https://powershell.one/powershell-internals/attributes/auto-completion">tab-completion</a>, and attributes that <a href="https://powershell.one/powershell-internals/attributes/transformation">coerce values to a certain type</a> (even interacting with the user), and more. Check out Dr. Tobias Weltner’s series of articles, starting with his <a href="https://powershell.one/powershell-internals/attributes/primer">primer</a> where you’re sure to learn about at least one built-in attribute you never knew existed…</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/casting" class="page__taxonomy-item" rel="tag">casting</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/classes" class="page__taxonomy-item" rel="tag">classes</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/powershell" class="page__taxonomy-item" rel="tag">powershell</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/validator" class="page__taxonomy-item" rel="tag">validator</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/powershell" class="page__taxonomy-item" rel="tag">powershell</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-03-03T00:00:00-05:00">March 3, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=jaykul&text=Empowering+your+code+with+Attributes%20https%3A%2F%2Fhuddledmasses.org%2F2020%2F03%2Fempowering-your-pwsh-with-attributes%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhuddledmasses.org%2F2020%2F03%2Fempowering-your-pwsh-with-attributes%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fhuddledmasses.org%2F2020%2F03%2Fempowering-your-pwsh-with-attributes%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/2020/03/powershell-casting-oddities/" class="pagination--pager" title="PowerShell Casting Oddities
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <section id="static-comments">
+        
+          <!-- Start static comments -->
+          <div class="js-comments">
+            
+          </div>
+          <!-- End static comments -->
+
+          <!-- Start new comment form -->
+          <div class="page__comments-form">
+            <h4 class="page__comments-title">Leave a comment</h4>
+            <p class="small">Your email address will not be published. Required fields are marked <span class="required">*</span></p>
+            <form id="new_comment" class="page__comments-form js-form form" method="post" action="https://staticman3.herokuapp.com/v3/entry/github/jaykul/jaykul.github.io/jekyll-source/comments">
+              <div class="form__spinner">
+                <i class="fas fa-spinner fa-spin fa-3x fa-fw"></i>
+                <span class="sr-only">Loading...</span>
+              </div>
+
+              <div class="form-group">
+                <label for="comment-form-message">Comment <small class="required">*</small></label>
+                <textarea type="text" rows="3" id="comment-form-message" name="fields[message]" tabindex="1"></textarea>
+                <div class="small help-block"><a href="https://daringfireball.net/projects/markdown/">Markdown is supported.</a></div>
+              </div>
+              <div class="form-group">
+                <label for="comment-form-name">Name <small class="required">*</small></label>
+                <input type="text" id="comment-form-name" name="fields[name]" tabindex="2" />
+              </div>
+              <div class="form-group">
+                <label for="comment-form-email">Email address <small class="required">*</small></label>
+                <input type="email" id="comment-form-email" name="fields[email]" tabindex="3" />
+              </div>
+              <div class="form-group">
+                <label for="comment-form-url">Website (optional)</label>
+                <input type="url" id="comment-form-url" name="fields[url]" tabindex="4"/>
+              </div>
+              <div class="form-group hidden" style="display: none;">
+                <input type="hidden" name="options[slug]" value="empowering-your-pwsh-with-attributes">
+                <label for="comment-form-location">Not used. Leave blank if you are a human.</label>
+                <input type="text" id="comment-form-location" name="fields[hidden]" autocomplete="off"/>
+                <input type="hidden" name="options[reCaptcha][siteKey]" value="6LcBqOAUAAAAADYldyKRDtnu9ZQO4rArHXv-4Tc4">
+                <input type="hidden" name="options[reCaptcha][secret]" value="IskWAszCP3hHJdMbkabDJWO9h4QDOmvg25qxFz+Mae3qGg5bIYEAG3o4yEQlE+UMvcYAXWD9YTEgObbaayTp7ghsuUnURFzenzNYIiWnK5ZzegIhl65kf9goh2HHHqWhiBGAJRQh/+ZL1LobG3vZkQM/LLmcdjcNlETtRMgoF54NcuDQgdBWpUtyrSmFa/f/ht/eIp5ykgomplU780/vEYvmsTN13S9uvtQJX71H/5Ogitqr6poubKhehGLoM67rsEsjgZBe0qYKg7DpodooIRE6tNceQTzRlXrKyyzoI5xYzPuy1QkhDcpcurIZB7aGIkQvV1Tyj7e0Jm+IAljU4w==">
+              </div>
+              <!-- Start comment form alert messaging -->
+              <p class="hidden js-notice">
+                <strong class="js-notice-text"></strong>
+              </p>
+              <!-- End comment form alert messaging -->
+              
+                <div class="form-group">
+                  <div class="g-recaptcha" data-sitekey="6LcBqOAUAAAAADYldyKRDtnu9ZQO4rArHXv-4Tc4"></div>
+                </div>
+              
+              <div class="form-group">
+                <button type="submit" id="comment-form-submit" tabindex="5" class="btn btn--primary btn--large">Submit comment</button>
+              </div>
+            </form>
+          </div>
+          <!-- End new comment form -->
+          <script async src="https://www.google.com/recaptcha/api.js"></script>
+        
+      </section>
+    
+</div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2020/03/powershell-casting-oddities/" rel="permalink">PowerShell Casting Oddities
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">PowerShell’s casting can result in some weird results.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/10/developer-brain/" rel="permalink">How the developer’s brain works
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  I need to finish the PoshCode module, so I start working on that …
+  I realize the “Configuration” module that is inside PoshCode, is actually more import...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/07/validating-self-signed-certificates-properly-from-powershell/" rel="permalink">Validating Self-Signed Certificates From .Net and PowerShell
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/2014/07/a-fresh-start/" rel="permalink">A Fresh Start
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A few weeks ago, someone somehow injected a shell onto my WordPress powered blog site. They managed to get multiple hacking tools installed, delete files req...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+          <li><a href="https://twitter.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+        
+      
+        
+          <li><a href="https://github.com/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://linkedin.com/in/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i> LinkedIn</a></li>
+        
+      
+        
+          <li><a href="https://stackoverflow.com/users/8718/jaykul" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> StackOverflow</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Joel "Jaykul" Bennett. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-52513307-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    (function ($) {
+    $('#new_comment').submit(function () {
+      var form = this;
+
+      $(form).addClass('disabled');
+      $('#comment-form-submit').html('<i class="fas fa-spinner fa-spin fa-fw"></i> Loading...');
+
+      $.ajax({
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        contentType: 'application/x-www-form-urlencoded',
+        success: function (data) {
+          $('#comment-form-submit').html('Submitted');
+          $('.page__comments-form .js-notice').removeClass('notice--danger');
+          $('.page__comments-form .js-notice').addClass('notice--success');
+          showAlert('Thanks for your comment! It will show on the site once it has been approved.');
+        },
+        error: function (err) {
+          console.log(err);
+          $('#comment-form-submit').html('Submit comment');
+          $('.page__comments-form .js-notice').removeClass('notice--success');
+          $('.page__comments-form .js-notice').addClass('notice--danger');
+          showAlert('Sorry, there was an error with your submission. Please make sure all required fields have been completed and try again.');
+          $(form).removeClass('disabled');
+        }
+      });
+
+      return false;
+    });
+
+    function showAlert(message) {
+      $('.page__comments-form .js-notice').removeClass('hidden');
+      $('.page__comments-form .js-notice-text').html(message);
+    }
+  })(jQuery);
+  </script>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
