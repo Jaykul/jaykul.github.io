@@ -35,7 +35,7 @@ In .NET, an `Attribute` is a class that inherits from `System.Attribute` directl
 
 Attributes are applied to classes, methods, fields and variables by specifying the attribute name in square brackets right before the thing you want the attribute to apply to. Note that although the name of custom attribute classes should always end with "Attribute", you can optionally leave that off when _using_ the attribute. However, in PowerShell, the parentheses that go after the attribute name are never _optional_ (although they are in C#, if the attribute doesn't require parameters to its constructor). Thus, in this PowerShell example, we see `ValidateNotNullAttribute` applied to a `string` variable:
 
-```PowerShell
+```powershell
 [ValidateNotNull()]
 [string]$Name = ""
 ```
@@ -72,7 +72,7 @@ As you can see, the `ScriptBlock` property is required in the constructor, but t
 
 In PowerShell, any settable property of an attribute can be set within the annotation parentheses as `Name = $Value`, and if it's a boolean property, you can just write the name and leave off the assignment to set it true. Lets take a look at an example:
 
-```PowerShell
+```powershell
 filter Get-Base64Content {
     [CmdletBinding()]
     param(
@@ -101,7 +101,7 @@ Since that was a pretty complete example, there are a few other things in this c
 
 Since attributes are just classes that derive from `System.Attribute`, you can writing your own in PowerShell very simply. Just inherit like this:
 
-```PowerShell
+```powershell
 class HumbleAttribute : Attribute {
 
 }
@@ -109,7 +109,7 @@ class HumbleAttribute : Attribute {
 
 Of course, this `HumbleAttribute` doesn't _do_ anything... except that it's metadata. That means we can find _things_ which have that attribute on them, so if we have a command with the `[Humble()]` attribute on it:
 
-```PowerShell
+```powershell
 function Test-Humility {
     [Humble()][CmdletBinding()]
     param()
@@ -119,14 +119,14 @@ function Test-Humility {
 
 We could find all commands with that attribute like this:
 
-```PowerShell
+```powershell
 Get-Command | Where { $_.ScriptBlock.Attributes.TypeId.Name -eq "HumbleAttribute" }
 ```
 
 Of course, any properties or methods you add to the attribute can be used at will, and you can inherit from other attributes, so we could, for instance, extend the `CmdletBinding` attribute with a list of dependencies like this:
 
 
-```PowerShell
+```powershell
 class BuildCmdletAttribute : System.Management.Automation.CmdletBindingAttribute {
     [string[]]$Requires
 
@@ -140,8 +140,7 @@ class BuildCmdletAttribute : System.Management.Automation.CmdletBindingAttribute
 
 Now we could add that attribute to some build steps, like this:
 
-```PowerShell
-
+```powershell
 function publish {
     [BuildCmdlet(("init", "build"))]param()
     Write-Information "BUILDING: $ModuleName from $Path"
@@ -168,7 +167,7 @@ function init {
 
 And you could write commands that take advantage of that metadata, by pulling it out from the `Attributes`, so that we could, for example, sort a list of these `BuildCmdlet` objects into dependency order, and then ... run them:
 
-```PowerShell
+```powershell
 Get-Command |
     Where-Object { $_.ScriptBlock.Attributes.TypeId.Name -eq "BuildCmdletAttribute" } |
     Add-Member ScriptProperty Requires {
