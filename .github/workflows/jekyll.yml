@@ -8,6 +8,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    # container:
+    #   image: jekyll/builder:latest
+    #   env:
+    #     JEKYLL_ENV: production
+    #   volumes:
+    #     - ${{ github.workspace }}/source:/srv/jekyll
+    #     - ${{ github.workspace }}/source/_site:/srv/jekyll/_site
+    #   options: --cpus 1
 
     steps:
     - name: Checkout jekyll-source
