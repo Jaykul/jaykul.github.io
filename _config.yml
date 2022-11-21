@@ -153,6 +153,7 @@ footer:
 # Reading Files
 include:
   - .htaccess
+  - .well-known
   - _pages
 exclude:
   - vendor
@@ -178,7 +179,7 @@ exclude:
   - tmp
 keep_files:
   - .git
-encoding: "utf-8"
+encoding: "UTF-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
 
