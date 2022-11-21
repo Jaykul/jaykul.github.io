@@ -406,8 +406,8 @@
 
 <p>Attributes are applied to classes, methods, fields and variables by specifying the attribute name in square brackets right before the thing you want the attribute to apply to. Note that although the name of custom attribute classes should always end with “Attribute”, you can optionally leave that off when <em>using</em> the attribute. However, in PowerShell, the parentheses that go after the attribute name are never <em>optional</em> (although they are in C#, if the attribute doesn’t require parameters to its constructor). Thus, in this PowerShell example, we see <code class="language-plaintext highlighter-rouge">ValidateNotNullAttribute</code> applied to a <code class="language-plaintext highlighter-rouge">string</code> variable:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="kt">ValidateNotNull</span><span class="p">()]</span><span class="w">
-</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nv">$Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">ValidateNotNull</span><span class="p">()]</span><span class="w">
+</span><span class="p">[</span><span class="n">string</span><span class="p">]</span><span class="nv">$Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span><span class="w">
 </span></code></pre></div></div>
 
 <p>In PowerShell, even more things than usual support attributes: not only classes and functions but also scripts, including anonymous scriptblocks, as well as parameters, fields, and even variables. Two special cases are worth calling out:</p>
@@ -443,15 +443,15 @@ TypeId       Property   System.Object TypeId {get;}
 
 <p>In PowerShell, any settable property of an attribute can be set within the annotation parentheses as <code class="language-plaintext highlighter-rouge">Name = $Value</code>, and if it’s a boolean property, you can just write the name and leave off the assignment to set it true. Lets take a look at an example:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">filter</span><span class="w"> </span><span class="nf">Get-Base64Content</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="p">[</span><span class="kt">CmdletBinding</span><span class="p">()]</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">filter</span><span class="w"> </span><span class="n">Get-Base64Content</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">[</span><span class="n">CmdletBinding</span><span class="p">()]</span><span class="w">
     </span><span class="kr">param</span><span class="p">(</span><span class="w">
-        </span><span class="p">[</span><span class="kt">ValidateScript</span><span class="p">({</span><span class="w"> </span><span class="kt">Test</span><span class="nt">-Path</span><span class="w"> </span><span class="bp">$_</span><span class="w"> </span><span class="nt">-Type</span><span class="w"> </span><span class="kt">Leaf</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="kt">ErrorMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The Path must point to an existing file"</span><span class="p">)]</span><span class="w">
-        </span><span class="p">[</span><span class="kt">Parameter</span><span class="p">(</span><span class="kt">Mandatory</span><span class="p">,</span><span class="w"> </span><span class="kt">ValueFromPipeline</span><span class="p">,</span><span class="w"> </span><span class="kt">ValueFromPipelineByPropertyName</span><span class="p">)]</span><span class="w">
-        </span><span class="p">[</span><span class="kt">Alias</span><span class="p">(</span><span class="s2">"PSPath"</span><span class="p">)]</span><span class="w">
-        </span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nv">$Path</span><span class="w">
+        </span><span class="p">[</span><span class="n">ValidateScript</span><span class="p">({</span><span class="w"> </span><span class="n">Test-Path</span><span class="w"> </span><span class="bp">$_</span><span class="w"> </span><span class="nt">-Type</span><span class="w"> </span><span class="nx">Leaf</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">ErrorMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The Path must point to an existing file"</span><span class="p">)</span><span class="err">]</span><span class="w">
+        </span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="p">,</span><span class="w"> </span><span class="n">ValueFromPipeline</span><span class="p">,</span><span class="w"> </span><span class="n">ValueFromPipelineByPropertyName</span><span class="p">)]</span><span class="w">
+        </span><span class="p">[</span><span class="n">Alias</span><span class="p">(</span><span class="s2">"PSPath"</span><span class="p">)]</span><span class="w">
+        </span><span class="p">[</span><span class="n">string</span><span class="p">]</span><span class="nv">$Path</span><span class="w">
     </span><span class="p">)</span><span class="w">
-    </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">Encoding</span><span class="p">]::</span><span class="nf">UTF8.GetString</span><span class="p">([</span><span class="no">System.</span><span class="kt">Convert</span><span class="p">]::</span><span class="nf">FromBase64String</span><span class="p">((</span><span class="nf">Get-Content</span><span class="w"> </span><span class="nt">-Raw</span><span class="w"> </span><span class="nv">$Path</span><span class="p">)))</span><span class="w">
+    </span><span class="p">[</span><span class="n">System.Text.Encoding</span><span class="p">]::</span><span class="n">UTF8.GetString</span><span class="p">([</span><span class="n">System.Convert</span><span class="p">]::</span><span class="n">FromBase64String</span><span class="p">((</span><span class="n">Get-Content</span><span class="w"> </span><span class="nt">-Raw</span><span class="w"> </span><span class="nv">$Path</span><span class="p">)))</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -483,25 +483,25 @@ TypeId       Property   System.Object TypeId {get;}
 <p>Of course, this <code class="language-plaintext highlighter-rouge">HumbleAttribute</code> doesn’t <em>do</em> anything… except that it’s metadata. That means we can find <em>things</em> which have that attribute on them, so if we have a command with the <code class="language-plaintext highlighter-rouge">[Humble()]</code> attribute on it:</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">function</span><span class="w"> </span><span class="nf">Test-Humility</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="p">[</span><span class="kt">Humble</span><span class="p">()][</span><span class="kt">CmdletBinding</span><span class="p">()]</span><span class="w">
+    </span><span class="p">[</span><span class="n">Humble</span><span class="p">()][</span><span class="n">CmdletBinding</span><span class="p">()]</span><span class="w">
     </span><span class="kr">param</span><span class="p">()</span><span class="w">
-    </span><span class="nf">Write-Host</span><span class="w"> </span><span class="s2">"I'm humble"</span><span class="w">
+    </span><span class="n">Write-Host</span><span class="w"> </span><span class="s2">"I'm humble"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>We could find all commands with that attribute like this:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-Command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Where</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="o">.</span><span class="nf">ScriptBlock</span><span class="o">.</span><span class="nf">Attributes</span><span class="o">.</span><span class="nf">TypeId</span><span class="o">.</span><span class="nf">Name</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="s2">"HumbleAttribute"</span><span class="w"> </span><span class="p">}</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Get-Command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Where</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="o">.</span><span class="nf">ScriptBlock</span><span class="o">.</span><span class="nf">Attributes</span><span class="o">.</span><span class="nf">TypeId</span><span class="o">.</span><span class="nf">Name</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="s2">"HumbleAttribute"</span><span class="w"> </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Of course, any properties or methods you add to the attribute can be used at will, and you can inherit from other attributes, so we could, for instance, extend the <code class="language-plaintext highlighter-rouge">CmdletBinding</code> attribute with a list of dependencies like this:</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">class</span><span class="w"> </span><span class="nc">BuildCmdletAttribute</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">System</span><span class="err">.</span><span class="nc">Management</span><span class="err">.</span><span class="nc">Automation</span><span class="err">.</span><span class="nc">CmdletBindingAttribute</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="p">[</span><span class="kt">string</span><span class="p">[]]</span><span class="nv">$Requires</span><span class="w">
+    </span><span class="p">[</span><span class="n">string</span><span class="p">[]]</span><span class="nv">$Requires</span><span class="w">
 
-    </span><span class="nf">BuildCmdletAttribute</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="n">BuildCmdletAttribute</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
 
-    </span><span class="nf">BuildCmdletAttribute</span><span class="p">([</span><span class="kt">string</span><span class="p">[]]</span><span class="nv">$Requires</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">BuildCmdletAttribute</span><span class="p">([</span><span class="n">string</span><span class="p">[]]</span><span class="nv">$Requires</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="bp">$this</span><span class="o">.</span><span class="nf">Requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$Requires</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -510,44 +510,44 @@ TypeId       Property   System.Object TypeId {get;}
 <p>Now we could add that attribute to some build steps, like this:</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">function</span><span class="w"> </span><span class="nf">publish</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="p">[</span><span class="kt">BuildCmdlet</span><span class="p">((</span><span class="s2">"init"</span><span class="p">,</span><span class="w"> </span><span class="s2">"build"</span><span class="p">))]</span><span class="kr">param</span><span class="p">()</span><span class="w">
-    </span><span class="nf">Write-Information</span><span class="w"> </span><span class="s2">"BUILDING: </span><span class="nv">$ModuleName</span><span class="s2"> from </span><span class="nv">$Path</span><span class="s2">"</span><span class="w">
+    </span><span class="p">[</span><span class="n">BuildCmdlet</span><span class="p">((</span><span class="s2">"init"</span><span class="p">,</span><span class="w"> </span><span class="s2">"build"</span><span class="p">))]</span><span class="kr">param</span><span class="p">()</span><span class="w">
+    </span><span class="n">Write-Information</span><span class="w"> </span><span class="s2">"BUILDING: </span><span class="nv">$ModuleName</span><span class="s2"> from </span><span class="nv">$Path</span><span class="s2">"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 </span><span class="kr">function</span><span class="w"> </span><span class="nf">update</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="p">[</span><span class="kt">BuildCmdlet</span><span class="p">(</span><span class="s2">"init"</span><span class="p">)]</span><span class="kr">param</span><span class="p">()</span><span class="w">
-    </span><span class="nf">Write-Information</span><span class="w"> </span><span class="s2">"UPDATING dependencies"</span><span class="w">
-    </span><span class="nf">Install-RequiredModules</span><span class="w">
+    </span><span class="p">[</span><span class="n">BuildCmdlet</span><span class="p">(</span><span class="s2">"init"</span><span class="p">)]</span><span class="kr">param</span><span class="p">()</span><span class="w">
+    </span><span class="n">Write-Information</span><span class="w"> </span><span class="s2">"UPDATING dependencies"</span><span class="w">
+    </span><span class="n">Install-RequiredModules</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 </span><span class="kr">function</span><span class="w"> </span><span class="nf">build</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="p">[</span><span class="kt">BuildCmdlet</span><span class="p">((</span><span class="s2">"update"</span><span class="p">,</span><span class="s2">"init"</span><span class="p">))]</span><span class="kr">param</span><span class="p">()</span><span class="w">
-    </span><span class="nf">Write-Information</span><span class="w"> </span><span class="s2">"BUILDING: YourModuleName from </span><span class="nv">$PScriptRoot</span><span class="s2">"</span><span class="w">
-    </span><span class="nf">Build-Module</span><span class="w">
+    </span><span class="p">[</span><span class="n">BuildCmdlet</span><span class="p">((</span><span class="s2">"update"</span><span class="p">,</span><span class="s2">"init"</span><span class="p">))]</span><span class="kr">param</span><span class="p">()</span><span class="w">
+    </span><span class="n">Write-Information</span><span class="w"> </span><span class="s2">"BUILDING: YourModuleName from </span><span class="nv">$PScriptRoot</span><span class="s2">"</span><span class="w">
+    </span><span class="n">Build-Module</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 </span><span class="kr">function</span><span class="w"> </span><span class="nf">init</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="p">[</span><span class="kt">BuildCmdlet</span><span class="p">()]</span><span class="kr">param</span><span class="p">()</span><span class="w">
-    </span><span class="nf">Write-Information</span><span class="w"> </span><span class="s2">"INITIALIZING build variables"</span><span class="w">
-    </span><span class="nv">$Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">gitversion</span><span class="w"> </span><span class="nt">-showvariable</span><span class="w"> </span><span class="nx">SemVer</span><span class="w">
+    </span><span class="p">[</span><span class="n">BuildCmdlet</span><span class="p">()]</span><span class="kr">param</span><span class="p">()</span><span class="w">
+    </span><span class="n">Write-Information</span><span class="w"> </span><span class="s2">"INITIALIZING build variables"</span><span class="w">
+    </span><span class="nv">$Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gitversion</span><span class="w"> </span><span class="nt">-showvariable</span><span class="w"> </span><span class="nx">SemVer</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>And you could write commands that take advantage of that metadata, by pulling it out from the <code class="language-plaintext highlighter-rouge">Attributes</code>, so that we could, for example, sort a list of these <code class="language-plaintext highlighter-rouge">BuildCmdlet</code> objects into dependency order, and then … run them:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">Get-Command</span><span class="w"> </span><span class="o">|</span><span class="w">
-    </span><span class="nf">Where-Object</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="o">.</span><span class="nf">ScriptBlock</span><span class="o">.</span><span class="nf">Attributes</span><span class="o">.</span><span class="nf">TypeId</span><span class="o">.</span><span class="nf">Name</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="s2">"BuildCmdletAttribute"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">|</span><span class="w">
-    </span><span class="nx">Add-Member</span><span class="w"> </span><span class="nx">ScriptProperty</span><span class="w"> </span><span class="nx">Requires</span><span class="w"> </span><span class="p">{</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Get-Command</span><span class="w"> </span><span class="o">|</span><span class="w">
+    </span><span class="n">Where-Object</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="o">.</span><span class="nf">ScriptBlock</span><span class="o">.</span><span class="nf">Attributes</span><span class="o">.</span><span class="nf">TypeId</span><span class="o">.</span><span class="nf">Name</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="s2">"BuildCmdletAttribute"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">|</span><span class="w">
+    </span><span class="n">Add-Member</span><span class="w"> </span><span class="nx">ScriptProperty</span><span class="w"> </span><span class="nx">Requires</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="bp">$this</span><span class="o">.</span><span class="nf">ScriptBlock</span><span class="o">.</span><span class="nf">Attributes</span><span class="o">.</span><span class="nf">Where</span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="o">.</span><span class="nf">TypeId</span><span class="o">.</span><span class="nf">Name</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="s2">"BuildCmdletAttribute"</span><span class="p">}</span><span class="o">.</span><span class="nf">Requires</span><span class="w">
     </span><span class="p">}</span><span class="w"> </span><span class="nt">-Passthru</span><span class="w"> </span><span class="nt">-Force</span><span class="w"> </span><span class="o">|</span><span class="w">
-    </span><span class="nx">Add-Member</span><span class="w"> </span><span class="nx">ScriptProperty</span><span class="w"> </span><span class="nx">Weight</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">Add-Member</span><span class="w"> </span><span class="nx">ScriptProperty</span><span class="w"> </span><span class="nx">Weight</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nv">$Weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
         </span><span class="kr">foreach</span><span class="w"> </span><span class="p">(</span><span class="nv">$command</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="bp">$this</span><span class="o">.</span><span class="nf">Requires</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nv">$Weight</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">[</span><span class="kt">Math</span><span class="p">]::</span><span class="nf">Max</span><span class="p">((</span><span class="nf">Get-Command</span><span class="w"> </span><span class="nv">$command</span><span class="p">)</span><span class="o">.</span><span class="nf">Weight</span><span class="p">,</span><span class="w"> </span><span class="nx">1</span><span class="p">)</span><span class="w">
+            </span><span class="nv">$Weight</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">[</span><span class="n">Math</span><span class="p">]::</span><span class="n">Max</span><span class="p">((</span><span class="n">Get-Command</span><span class="w"> </span><span class="nv">$command</span><span class="p">)</span><span class="o">.</span><span class="nf">Weight</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">
         </span><span class="p">}</span><span class="w">
         </span><span class="nv">$Weight</span><span class="w">
     </span><span class="p">}</span><span class="w"> </span><span class="nt">-Passthru</span><span class="w">  </span><span class="nt">-Force</span><span class="w"> </span><span class="o">|</span><span class="w">
-    </span><span class="nf">Sort-Object</span><span class="w"> </span><span class="nx">Weight</span><span class="w"> </span><span class="nt">-Ov</span><span class="w"> </span><span class="nx">Commands</span><span class="w"> </span><span class="o">|</span><span class="w">
+    </span><span class="n">Sort-Object</span><span class="w"> </span><span class="nx">Weight</span><span class="w"> </span><span class="nt">-Ov</span><span class="w"> </span><span class="nx">Commands</span><span class="w"> </span><span class="o">|</span><span class="w">
     </span><span class="kr">ForEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="bp">$_</span><span class="w"> </span><span class="nt">-InformationAction</span><span class="w"> </span><span class="kr">Continue</span><span class="w"> </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -880,7 +880,7 @@ TypeId       Property   System.Object TypeId {get;}
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2020 Joel "Jaykul" Bennett. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2022 Joel "Jaykul" Bennett. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

@@ -376,7 +376,7 @@
         
         <p>In this article I’m going to present a module that helps you deal with one of the common problems for Windows PowerShell users (and even .Net developers) who are trying to interact from command-line applications with web interfaces (especially those that are hosted internally): Self-signed certificates, and how to ignore the errors that come when you try to validate them.  If you don’t care about why I wrote it the way I wrote it, you can just <a href="https://github.com/Jaykul/Tunable-SSL-Validator">check out the module on GitHub</a> or install it with PoshCode or PowerShellGet by running:</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="nf">Install-Module</span><span class="w"> </span><span class="nx">TunableSSLValidator</span><span class="w">
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">Install-Module</span><span class="w"> </span><span class="nx">TunableSSLValidator</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The module includes commands for importing certificates from files, loading them from the web server response of an http url, importing them to the Windows certificate store (to be trusted), and temporarily trusting them for a single PowerShell session.  It also includes proxy function command wrappers for <code class="language-plaintext highlighter-rouge">Invoke-WebRequest</code> and <code class="language-plaintext highlighter-rouge">Invoke-RestMethod</code> to add an <code class="language-plaintext highlighter-rouge">-Insecure</code> switch which allows single queries to ignore invalid SSL certificates.</p>
@@ -402,10 +402,10 @@
 <p>So if you want to proactively avoid SSL errors, you have to set the ServerCertificateValidationCallback. For certain situations, it’s enough to just do this in PowerShell:</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://csh.rit.edu"</span><span class="w">
-</span><span class="nv">$web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">Net.WebClient</span><span class="w">
-</span><span class="p">[</span><span class="no">System.Net.</span><span class="kt">ServicePointManager</span><span class="p">]::</span><span class="nf">ServerCertificateValidationCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$true</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span><span class="nv">$web</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">New-Object</span><span class="w"> </span><span class="nx">Net.WebClient</span><span class="w">
+</span><span class="p">[</span><span class="n">System.Net.ServicePointManager</span><span class="p">]::</span><span class="n">ServerCertificateValidationCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$true</span><span class="w"> </span><span class="p">}</span><span class="w">
 </span><span class="nv">$output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$web</span><span class="o">.</span><span class="nf">DownloadString</span><span class="p">(</span><span class="nv">$url</span><span class="p">)</span><span class="w">
-</span><span class="p">[</span><span class="no">System.Net.</span><span class="kt">ServicePointManager</span><span class="p">]::</span><span class="nf">ServerCertificateValidationCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">$null</span><span class="w">
+</span><span class="p">[</span><span class="n">System.Net.ServicePointManager</span><span class="p">]::</span><span class="n">ServerCertificateValidationCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">$null</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Note, that I set the ServerCertificateValidationCallback back to <code class="language-plaintext highlighter-rouge">$null</code> when I was done – this restores normal validation, so I have, in effect, only disabled the validation for that one call (since PowerShell isn’t generally multi-threaded, I don’t normally have to worry about other threads being affeected). However, setting the ServerCertificateValidationCallback to a scriptblock won’t work for an asynchronous callback (one that happens on a task thread), because the other thread won’t have a runspace to execute the script on.  So, if you try to use the same technique with Invoke-WebRequest or Invoke-RestMethod instead of calling the .Net <code class="language-plaintext highlighter-rouge">WebClient</code> methods directly, you’ll just get a different error:</p>
@@ -760,7 +760,7 @@ The script block you attempted to invoke was:  $true
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2020 Joel "Jaykul" Bennett. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2022 Joel "Jaykul" Bennett. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
