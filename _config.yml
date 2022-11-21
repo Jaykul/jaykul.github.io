@@ -88,8 +88,12 @@ yandex_site_verification :
 naver_site_verification  :
 
 # Social Sharing
+keybase:
+  username               : jaykul
 twitter:
   username               : jaykul
+mastodon:
+  username               : '@jaykul@fosstodon.org'
 facebook:
   username               : jaykul
   app_id                 :
@@ -98,9 +102,10 @@ og_image                 : # Open Graph/Twitter default site image
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
-  type                   : # Person or Organization (defaults to Person)
-  name                   : # If the user or organization name differs from the site's name
+  type                   : Person # Person or Organization (defaults to Person)
+  name                   : Joel Bennett # If the user or organization name differs from the site's name
   links: # An array of links to social media profiles
+    - https://fosstodon.org/jaykul
 
 # Analytics
 analytics:
@@ -120,9 +125,12 @@ author:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
       url: mailto:Jaykul@HuddledMasses.org
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/jaykul"
+    - label: "Mastodon"
+      icon: "fab fa-fw fa-mastodon"
+      url: "https://fosstodon.org/@jaykul"
+    # - label: "Twitter"
+    #   icon: "fab fa-fw fa-twitter-square"
+    #   url: "https://twitter.com/jaykul"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/jaykul"
@@ -137,9 +145,12 @@ author:
 # Site Footer
 footer:
   links:
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/jaykul"
+    - label: "Mastodon"
+      icon: "fab fa-fw fa-mastodon"
+      url: "https://fosstodon.org/@jaykul"
+    # - label: "Twitter"
+    #   icon: "fab fa-fw fa-twitter-square"
+    #   url: "https://twitter.com/jaykul"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/jaykul"
