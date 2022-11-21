@@ -38,7 +38,7 @@ jobs:
         path: 'master'
 
     - name: Copying _site content to master branch repo
-      run: cp -R ${{ github.workspace }}/source/_site/* ${{ github.workspace }}/master
+      run: cp -TR ${{ github.workspace }}/source/_site/ ${{ github.workspace }}/master
 
     - name: Commit files
       run: |
