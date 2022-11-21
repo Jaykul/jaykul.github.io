@@ -1,0 +1,12 @@
+---
+layout: none
+permalink: .well-known/nodeinfo/index.json
+---
+{
+  "links": [
+    {
+      "rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+      "href": "https://fosstodon.org/nodeinfo/2.0"
+    }
+  ]
+}
