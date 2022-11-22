@@ -88,12 +88,8 @@ yandex_site_verification :
 naver_site_verification  :
 
 # Social Sharing
-keybase:
-  username               : jaykul
 twitter:
   username               : jaykul
-mastodon:
-  username               : '@jaykul@fosstodon.org'
 facebook:
   username               : jaykul
   app_id                 :
@@ -120,46 +116,48 @@ author:
   avatar           : /assets/images/avatar.png
   bio              : An opinionated DevOps engineer, programmer, speaker, and Microsoft MVP.
   location         : Rochester, NY
+  mastodon         : '@jaykul@fosstodon.org'
+
 #  email            : Jaykul@HuddledMasses.org
   links:
-    - label: "Email"
-      icon: "fas fa-fw fa-envelope-square"
+    - label: Email
+      icon: fas fa-fw fa-envelope-square
       url: mailto:Jaykul@HuddledMasses.org
-    - label: "Mastodon"
-      icon: "fab fa-fw fa-mastodon"
-      url: "https://fosstodon.org/@jaykul"
-    # - label: "Twitter"
-    #   icon: "fab fa-fw fa-twitter-square"
-    #   url: "https://twitter.com/jaykul"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/jaykul"
-    - label: "LinkedIn"
-      icon: "fab fa-fw fa-linkedin-in"
-      url: "https://linkedin.com/in/jaykul"
-    - label: "StackOverflow"
-      icon: "fab fa-fw fa-stack-overflow"
-      url: "https://stackoverflow.com/users/8718/jaykul"
+    - label: Mastodon
+      icon: fab fa-fw fa-mastodon
+      url: https://fosstodon.org/@jaykul
+    - label: GitHub
+      icon: fab fa-fw fa-github
+      url: https://github.com/jaykul
+    - label: LinkedIn
+      icon: fab fa-fw fa-linkedin-in
+      url: https://linkedin.com/in/jaykul
+    - label: StackOverflow
+      icon: fab fa-fw fa-stack-overflow
+      url: https://stackoverflow.com/users/8718/jaykul
+    # - label: Twitter
+    #   icon: fab fa-fw fa-twitter-square
+    #   url: https://twitter.com/jaykul
 
 
 # Site Footer
 footer:
   links:
-    - label: "Mastodon"
-      icon: "fab fa-fw fa-mastodon"
-      url: "https://fosstodon.org/@jaykul"
-    # - label: "Twitter"
-    #   icon: "fab fa-fw fa-twitter-square"
-    #   url: "https://twitter.com/jaykul"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/jaykul"
-    - label: "LinkedIn"
-      icon: "fab fa-fw fa-linkedin-in"
-      url: "https://linkedin.com/in/jaykul"
-    - label: "StackOverflow"
-      icon: "fab fa-fw fa-stack-overflow"
-      url: "https://stackoverflow.com/users/8718/jaykul"
+    - label: Mastodon
+      icon: fab fa-fw fa-mastodon
+      url: https://fosstodon.org/@jaykul
+    - label: GitHub
+      icon: fab fa-fw fa-github
+      url: https://github.com/jaykul
+    - label: LinkedIn
+      icon: fab fa-fw fa-linkedin-in
+      url: https://linkedin.com/in/jaykul
+    - label: StackOverflow
+      icon: fab fa-fw fa-stack-overflow
+      url: https://stackoverflow.com/users/8718/jaykul
+    # - label: Twitter
+    #   icon: fab fa-fw fa-twitter-square
+    #   url: https://twitter.com/jaykul
 
 # Reading Files
 include:
